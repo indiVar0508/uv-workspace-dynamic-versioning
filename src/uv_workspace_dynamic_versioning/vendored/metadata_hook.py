@@ -1,7 +1,7 @@
 from __future__ import annotations
-from pathlib import Path
 
 from functools import cached_property
+from pathlib import Path
 
 from dunamai import Version
 from hatchling.metadata.plugin.interface import MetadataHookInterface
@@ -69,7 +69,8 @@ class DependenciesMetadataHook(BasePlugin, MetadataHookInterface):
         is_dynamic_optional_dependencies = "optional-dependencies" in dynamic
         if not (is_dynamic_dependencies or is_dynamic_optional_dependencies):
             raise ValueError(
-                "Cannot use this plugin when 'dependencies' or 'optional-dependencies' is not listed in 'project.dynamic'."
+                "Cannot use this plugin when 'dependencies' or 'optional-dependencies' "
+                "is not listed in 'project.dynamic'."
             )
 
         # check consistency between dynamic and project

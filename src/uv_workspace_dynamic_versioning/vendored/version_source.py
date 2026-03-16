@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from hatchling.version.source.plugin.interface import VersionSourceInterface
 
 from . import schemas
