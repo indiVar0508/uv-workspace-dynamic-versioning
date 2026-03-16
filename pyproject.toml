@@ -1,0 +1,27 @@
+[project]
+name = "uv-workspace-dynamic-versioning"
+dynamic = ["version"]
+description = "A dynamic version source plugin for uv workspaces."
+readme = "README.md"
+authors = [
+    { name = "Indivar Mishra", email = "indimishra@gmail.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "hatchling>=1.0.0",
+    "dunamai>=1.0.0",
+    "tomlkit>=0.11.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/indiVar0508/uv-workspace-dynamic-versioning"
+
+[project.entry-points.hatch]
+uv-workspace-dynamic-versioning = "uv_workspace_dynamic_versioning.plugin"
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
