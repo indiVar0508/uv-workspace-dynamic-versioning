@@ -18,7 +18,7 @@ dependencies = [
 Homepage = "https://github.com/indiVar0508/uv-workspace-dynamic-versioning"
 
 [project.entry-points.hatch]
-uv-workspace-dynamic-versioning = "uv_workspace_dynamic_versioning.plugin"
+uv-workspace-dynamic-versioning = "uv_workspace_dynamic_versioning.hooks"
 
 [build-system]
 requires = ["hatchling", "hatch-vcs"]
