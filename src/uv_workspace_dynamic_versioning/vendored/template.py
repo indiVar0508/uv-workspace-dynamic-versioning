@@ -18,6 +18,8 @@ from dunamai import (
 
 from . import schemas
 
+_JINJA_ENV = jinja2.sandbox.SandboxedEnvironment()
+
 
 def base_part(base: str, index: int) -> int:
     parts = base.split(".")
@@ -70,11 +72,19 @@ def render_template(
     custom_context = {}
     if config.format_jinja_imports:
         for entry in config.format_jinja_imports:
-            module = import_module(entry.module)
+            try:
+                module = import_module(entry.module)
+            except ImportError as e:
+                raise ValueError(f"Failed to import module '{entry.module}': {e}") from None
+
             if entry.item is not None:
-                custom_context[entry.item] = getattr(module, entry.item)
+                try:
+                    custom_context[entry.item] = getattr(module, entry.item)
+                except AttributeError:
+                    raise ValueError(
+                        f"Module '{entry.module}' has no item '{entry.item}'"
+                    ) from None
             else:
                 custom_context[entry.module] = module
 
-    env = jinja2.sandbox.SandboxedEnvironment()
-    return env.from_string(template).render(**default_context, **custom_context)
+    return _JINJA_ENV.from_string(template).render(**default_context, **custom_context)

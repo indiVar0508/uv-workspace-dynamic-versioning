@@ -56,6 +56,35 @@ def test_get_version_bypass(mocker):
     assert version_str == "1.2.3"
     assert v.base == "1.2.3"
 
+def test_get_from_file_path_traversal(tmp_path):
+    # Create a dummy project root
+    project_root = tmp_path / "project"
+    project_root.mkdir()
+    
+    # Create a sensitive file outside the project root
+    secret_file = tmp_path / "secrets.txt"
+    secret_file.write_text("SUPER_SECRET_TOKEN")
+    
+    config = schemas.UvWorkspaceDynamicVersioning(
+        from_file=schemas.FromFile(source="../secrets.txt")
+    )
+    
+    with pytest.raises(ValueError, match="is outside of the project root"):
+        get_version(config, project_root)
+
+def test_get_from_file_valid(tmp_path):
+    project_root = tmp_path
+    version_file = project_root / "VERSION"
+    version_file.write_text("v2.4.6")
+    
+    config = schemas.UvWorkspaceDynamicVersioning(
+        from_file=schemas.FromFile(source="VERSION", pattern="v(.*)")
+    )
+    
+    version_str, v = get_version(config, project_root)
+    assert version_str == "2.4.6"
+    assert v.base == "2.4.6"
+
 def test_metadata_hook_update_validation(mocker):
     hook = DependenciesMetadataHook(str(Path(".")), {})
     

@@ -2024,7 +2024,7 @@ test = [
 requires-dist = [
     { name = "dunamai", specifier = ">=1.0.0" },
     { name = "hatchling", specifier = ">=1.0.0" },
-    { name = "jinja2", specifier = ">=3.0.0" },
+    { name = "jinja2", specifier = ">=3.1.5" },
     { name = "mkdocs-git-revision-date-localized-plugin", marker = "extra == 'docs'", specifier = ">=1.2.0" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.0.0" },
     { name = "mkdocs-minify-plugin", marker = "extra == 'docs'", specifier = ">=0.6.0" },

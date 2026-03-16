@@ -11,7 +11,7 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - Implementation provides `DynamicWorkspaceVersionSource` and `DependenciesMetadataHook`.
 - Core logic handles VCS-based versioning with directory-specific git history patching.
 - Enhanced documentation with `mkdocs-material`, `mkdocstrings`, and high-quality docstrings.
-- Test coverage reached **71%** with unit tests for configuration, versioning, and metadata hooks.
+- Test coverage reached **74%** with unit tests for configuration, versioning, and metadata hooks.
 
 ## Key Decisions Made
 - **Build Backend:** Using `hatchling`.
@@ -19,6 +19,10 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - **Documentation UX:** Adopted Material for MkDocs with light/dark mode toggles, code copy buttons, and automated API reference via `mkdocstrings`.
 - **Quality Control:** Integrated `pytest-cov` for coverage tracking.
 - **Repository Hygiene:** Site artifacts and test caches ignored in `.gitignore`.
+- **Security Hardening**:
+    - Mitigated SSTI by using Jinja2 SandboxedEnvironment.
+    - Prevented Path Traversal by validating `from-file.source` against the project root.
+    - Improved robustness by logging Git subprocess failures to stderr instead of silencing them.
 
 ## Milestones
 - [x] Project initialization.
@@ -26,7 +30,8 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - [x] Core versioning logic implementation.
 - [ ] Integration testing with `uv` workspaces.
 - [x] High-quality Documentation (UX + API).
-- [x] 70%+ Test Coverage.
+- [x] 74%+ Test Coverage.
+- [x] Security Hardening (SSTI + Path Traversal).
 
 ## Open Questions
 - How to handle the transition to MkDocs 2.0 when it becomes stable?

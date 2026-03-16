@@ -2,15 +2,22 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
+import sys
 from functools import partial
 from pathlib import Path
 
 import tomlkit
-from dunamai import _VALID_PEP440, _VALID_PVP, _VALID_SEMVER, Style, Version
+from dunamai import Style, Version
 
 from .template import render_template
 
 from . import schemas
+
+# Standard version patterns (copied from dunamai for stability)
+VALID_PEP440 = r"(?x)^(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?(\+([a-zA-Z0-9]|[a-zA-Z0-9]{2}|[a-zA-Z0-9][a-zA-Z0-9.]+[a-zA-Z0-9]))?$"
+VALID_PVP = r"^\d+(\.\d+)*(-[a-zA-Z0-9]+)*$"
+VALID_SEMVER = r"(?x)^\d+\.\d+\.\d+(\-[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*)?(\+[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*)?$"
 
 
 def read(root: str):
@@ -33,9 +40,9 @@ def _get_bypassed_version() -> str | None:
 def check_version_style(version: str, style: Style = Style.Pep440) -> None:
     """Check if a version is valid for a style."""
     name, pattern = {
-        Style.Pep440: ("PEP 440", _VALID_PEP440),
-        Style.SemVer: ("Semantic Versioning", _VALID_SEMVER),
-        Style.Pvp: ("PVP", _VALID_PVP),
+        Style.Pep440: ("PEP 440", VALID_PEP440),
+        Style.SemVer: ("Semantic Versioning", VALID_SEMVER),
+        Style.Pvp: ("PVP", VALID_PVP),
     }[style]
     failure_message = f"Version '{version}' does not conform to the {name} style"
     if not re.search(pattern, version):
@@ -47,12 +54,23 @@ def check_version_style(version: str, style: Style = Style.Pep440) -> None:
             raise ValueError(failure_message)
 
 
-def _get_from_file_version(config: schemas.UvWorkspaceDynamicVersioning) -> str | None:
+def _get_from_file_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path) -> str | None:
     if config.from_file is None:
         return None
 
     source, pattern = (config.from_file.source, config.from_file.pattern)
-    content = Path(source).read_text().strip()
+
+    # Security: Ensure the file is within the project directory to prevent path traversal
+    source_path = (project_dir / source).resolve()
+    try:
+        source_path.relative_to(project_dir.resolve())
+    except ValueError:
+        raise ValueError(f"File '{source}' is outside of the project root")
+
+    if not source_path.is_file():
+        raise FileNotFoundError(f"File '{source}' does not exist")
+
+    content = source_path.read_text().strip()
 
     if pattern is None:
         return content
@@ -63,7 +81,6 @@ def _get_from_file_version(config: schemas.UvWorkspaceDynamicVersioning) -> str 
     return str(result.group(1))
 
 
-import subprocess
 def patch_version_for_directory(version: Version, path: Path) -> Version:
     """
     Patches a Dunamai Version object to reflect the history of a specific subdirectory.
@@ -107,8 +124,9 @@ def patch_version_for_directory(version: Version, path: Path) -> Version:
         status_cmd = ["git", "status", "--porcelain", "--", str(path)]
         status_out = subprocess.check_output(status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
         version.dirty = bool(status_out)
-    except Exception:
-        pass
+    except Exception as e:
+        # Avoid silent failures; log to stderr so users know why patching failed
+        print(f"uv-workspace-dynamic-versioning: directory patching failed: {e}", file=sys.stderr)
 
     return version
 
@@ -156,7 +174,7 @@ def get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path)
         parsed = Version.parse(bypassed, pattern=config.pattern)
         return bypassed, parsed
 
-    from_file = _get_from_file_version(config)
+    from_file = _get_from_file_version(config, project_dir)
     if from_file:
         parsed = Version.parse(from_file, pattern=config.pattern)
         return from_file, parsed
@@ -180,7 +198,7 @@ def get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path)
     else:
         updated = (
             got.bump(smart=True, index=config.bump_config.index)
-            if config.bump_config.enable
+            if config.bump_config.enable and got.distance > 0
             else got
         )
         serialized = updated.serialize(
