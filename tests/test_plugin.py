@@ -1,9 +1,12 @@
-import pytest
 from pathlib import Path
+
+import pytest
+from dunamai import Version
+
 from uv_workspace_dynamic_versioning.vendored import schemas
 from uv_workspace_dynamic_versioning.vendored.main import get_version, patch_version_for_directory
 from uv_workspace_dynamic_versioning.vendored.metadata_hook import DependenciesMetadataHook
-from dunamai import Version
+
 
 def test_config_parsing():
     data = {

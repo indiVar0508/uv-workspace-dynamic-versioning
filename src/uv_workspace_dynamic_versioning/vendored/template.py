@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import contextlib
-import os
 import re
 from datetime import datetime
 from importlib import import_module

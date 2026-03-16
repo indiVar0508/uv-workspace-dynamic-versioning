@@ -4,15 +4,13 @@ import os
 import re
 import subprocess
 import sys
-from functools import partial
 from pathlib import Path
 
 import tomlkit
 from dunamai import Style, Version
 
-from .template import render_template
-
 from . import schemas
+from .template import render_template
 
 # Standard version patterns (copied from dunamai for stability)
 VALID_PEP440 = r"(?x)^(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?(\+([a-zA-Z0-9]|[a-zA-Z0-9]{2}|[a-zA-Z0-9][a-zA-Z0-9.]+[a-zA-Z0-9]))?$"
@@ -64,8 +62,8 @@ def _get_from_file_version(config: schemas.UvWorkspaceDynamicVersioning, project
     source_path = (project_dir / source).resolve()
     try:
         source_path.relative_to(project_dir.resolve())
-    except ValueError:
-        raise ValueError(f"File '{source}' is outside of the project root")
+    except ValueError as e:
+        raise ValueError(f"File '{source}' is outside of the project root") from e
 
     if not source_path.is_file():
         raise FileNotFoundError(f"File '{source}' does not exist")
