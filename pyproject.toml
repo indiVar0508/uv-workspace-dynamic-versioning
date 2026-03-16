@@ -5,7 +5,7 @@ description = "A dynamic version source plugin for uv workspaces."
 readme = "README.md"
 authors = [
     { name = "Indivar Mishra", email = "indimishra@gmail.com" },
-    { name = "Antigravity", email = "antigravity@google.com" }
+    { name = "Pi", email = "pi@google.com" }
 ]
 requires-python = ">=3.8"
 dependencies = [
