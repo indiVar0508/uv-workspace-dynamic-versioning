@@ -4,7 +4,8 @@ dynamic = ["version"]
 description = "A dynamic version source plugin for uv workspaces."
 readme = "README.md"
 authors = [
-    { name = "Indivar Mishra", email = "indimishra@gmail.com" }
+    { name = "Indivar Mishra", email = "indimishra@gmail.com" },
+    { name = "Antigravity", email = "antigravity@google.com" }
 ]
 requires-python = ">=3.8"
 dependencies = [
@@ -16,10 +17,11 @@ dependencies = [
 
 [project.optional-dependencies]
 docs = [
-    "mkdocs-material>=9.0.0",
+    "mkdocs-material[recommended]>=9.5.0",
     "mkdocstrings[python]>=0.20.0",
     "mkdocs-minify-plugin>=0.6.0",
     "mkdocs-git-revision-date-localized-plugin>=1.2.0",
+    "mkdocs-glightbox>=0.3.0",
 ]
 test = [
     "pytest>=7.0.0",

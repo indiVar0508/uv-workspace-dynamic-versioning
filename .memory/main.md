@@ -19,6 +19,7 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - **Documentation UX:** Adopted Material for MkDocs with light/dark mode toggles, code copy buttons, and automated API reference via `mkdocstrings`.
 - **Quality Control:** Integrated `pytest-cov` for coverage tracking.
 - **Repository Hygiene:** Site artifacts and test caches ignored in `.gitignore`.
+- **Commit Strategy:** Adopted [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for all repository changes to ensure a clear and machine-readable project history.
 - **Security Hardening**:
     - Mitigated SSTI by using Jinja2 SandboxedEnvironment.
     - Prevented Path Traversal by validating `from-file.source` against the project root.

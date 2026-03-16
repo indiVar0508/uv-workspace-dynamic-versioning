@@ -1,29 +1,78 @@
 # uv-workspace-dynamic-versioning
 
-A dynamic versioning plugin for `uv` workspaces, built as a `hatch` extension.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/squidfunk/mkdocs-material/master/src/assets/logo.svg" width="100" />
+</p>
 
-## Overview
+<p align="center">
+  <em>A powerful Hatch plugin for dynamic versioning and dependency injection in uv workspaces.</em>
+</p>
 
-`uv-workspace-dynamic-versioning` is designed to simplify and automate version management in `uv` workspaces (monorepos). It integrates with the `hatch` build backend to provide:
+---
 
-1.  **VCS-based Dynamic Versioning**: Automatically generates project versions based on Git tags and history.
-2.  **Workspace Awareness**: Specifically handles sub-projects within a workspace by calculating version distance based on changes within the sub-project directory.
-3.  **Dynamic Dependency Injection**: Allows injecting the current version into `project.dependencies` and `project.optional-dependencies` using Jinja2 templates.
+## 🚀 Overview
 
-### Why it exists?
+`uv-workspace-dynamic-versioning` simplifies version management in `uv` workspaces (monorepos). It bridges the gap between VCS tags and project-specific versions, ensuring your workspace remains synchronized and secure.
 
-In a monorepo managed by `uv`, different packages often need to stay in sync or reference each other's versions dynamically. Managing these versions manually in `pyproject.toml` is error-prone. This plugin automates the process, ensuring that each package has a version reflecting its actual history and that dependencies are correctly updated during the build process.
+### 📖 Context & Origin
 
-## Installation
+This project was created to address a specific limitation in the existing `uv-dynamic-versioning` plugin when used within complex monorepos and `uv` workspaces.
 
-```bash
-uv pip install uv-workspace-dynamic-versioning
-```
+As discussed in [ninoseki/uv-dynamic-versioning#81](https://github.com/ninoseki/uv-dynamic-versioning/issues/81#issuecomment-3756445422), the standard implementation often calculates version distance and commit hashes based on the **entire repository history**. In a workspace with multiple packages, this leads to:
+1.  **False Positives**: Packages bumping versions when unrelated code in the workspace changes.
+2.  **Inaccurate Metadata**: Commit hashes reflecting global repo state rather than the state of the specific package.
 
-Or add it to your `pyproject.toml` build system requirements:
+`uv-workspace-dynamic-versioning` introduces **Directory-Specific Patching**. It re-calculates the Git distance and commit hash by filtering the history to the specific package subdirectory, ensuring that versions only reflect changes relevant to that package.
+
+---
+
+## ✨ Key Features
+
+*   **VCS-Powered Versioning**: Automatically derive versions from Git, Mercurial, and more via [Dunamai](https://github.com/mtkennerly/dunamai).
+*   **Workspace Aware**: Accurate `distance` and `commit` hash calculation restricted to the project subdirectory.
+*   **Dynamic Dependencies**: Inject versions into `dependencies` using Jinja2 templates (e.g., `pkg == {{ version.base }}`).
+*   **Secure by Design**: Sandboxed Jinja2 environment and Path Traversal protection.
+*   **Highly Configurable**: Custom formats, bumping logic, and fallback versions.
+
+---
+
+## 🛠 Quick Start
+
+### 1. Installation
+
+Add the plugin to your `build-system.requires` in `pyproject.toml`:
 
 ```toml
 [build-system]
 requires = ["hatchling", "uv-workspace-dynamic-versioning"]
 build-backend = "hatchling.build"
 ```
+
+### 2. Basic Configuration
+
+Enable the version source and mark the version as dynamic:
+
+```toml
+[project]
+name = "my-awesome-package"
+dynamic = ["version"]
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+```
+
+---
+
+## 📖 Why Choose This Plugin?
+
+In a monorepo, a single Git tag often applies to multiple packages. Standard versioning tools might report the same version for all packages, regardless of which ones actually changed. 
+
+**This plugin is different.** It patches the version metadata to reflect the history of the **specific package directory**, ensuring that version bumps only happen where they are needed.
+
+---
+
+## 🎓 Next Steps
+
+*   [Follow the Getting Started Guide](usage.md)
+*   [Explore Configuration Options](configuration.md)
+*   [Check the API Reference](api.md)
