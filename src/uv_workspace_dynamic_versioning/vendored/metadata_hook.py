@@ -50,6 +50,19 @@ class DependenciesMetadataHook(BasePlugin, MetadataHookInterface):
         }
 
     def update(self, metadata: dict) -> None:
+        """
+        Updates the project metadata with dynamic dependencies.
+
+        This method is called by Hatch during the metadata hook phase. It renders
+        dependency templates using Jinja2 and injects them into the metadata dictionary.
+
+        Args:
+            metadata (dict): The project metadata dictionary.
+
+        Raises:
+            ValueError: If 'dependencies' or 'optional-dependencies' are not listed
+                as dynamic in pyproject.toml, or if they are already defined in [project].
+        """
         # check dynamic
         dynamic = metadata.get("dynamic", [])
         is_dynamic_dependencies = "dependencies" in dynamic

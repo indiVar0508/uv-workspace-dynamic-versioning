@@ -9,3 +9,11 @@ wheels/
 # Virtual environments
 .venv
 .pi/memory-md
+
+# Documentation
+site/
+
+# Testing
+.pytest_cache/
+
+.memory/branches/*/log.md
