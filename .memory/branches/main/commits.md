@@ -168,3 +168,83 @@ The project was established as a `hatch` extension using `hatchling` and `dunama
 - Refined the core `get_version` API to require the `project_dir` context, ensuring secure and relative file resolution throughout the plugin.
 - Formally updated the project roadmap to track "Security Hardening" (SSTI and Path Traversal) as a completed milestone.
 - Updated the README and technical documentation to reflect the latest security posture and architectural changes.
+
+---
+
+## Commit 4eb36828 | 2026-03-16T23:18:16.323Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project was established as a `hatch` extension for `uv` workspaces, utilizing `hatchling` and `dunamai` to automate versioning and dependency injection. Key features include directory-specific Git history patching for monorepos and Jinja2-based dynamic dependency updates. A robust development environment was built, featuring an MkDocs Material documentation site with automated API references, a `pytest` suite with 74% coverage, and formalized contribution guidelines. Critical security hardening addressed Server-Side Template Injection (SSTI) via Jinja2 sandboxing and Path Traversal vulnerabilities by enforcing project-root validation for file-based version sources. Operational visibility was enhanced by replacing silent Git subprocess failures with explicit error logging.
+
+### This Commit's Contribution
+
+- Adopted [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) to ensure a clear, machine-readable project history.
+- Resolved a logic inconsistency where versions were automatically bumped even when exactly on a Git tag; it now correctly only bumps when the distance is greater than zero.
+- Hardened the codebase against upstream breaking changes by copying required version regex patterns locally instead of importing private `dunamai` members.
+- Optimized performance by caching the Jinja2 `SandboxedEnvironment` at the module level to avoid redundant initialization during build processes.
+- Improved error handling for dynamic templates by implementing descriptive `ValueError` messages when module imports fail.
+- Standardized module structure by moving all functional imports to the top-level in accordance with PEP 8.
+- Updated the project roadmap in `.memory/main.md` to reflect the adoption of standard commit conventions and the completion of recent architectural refinements.
+
+---
+
+## Commit e5c83566 | 2026-03-16T23:19:41.137Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust development foundation was established, including a `pytest` suite with 74% coverage, a Material-themed documentation site with automated API references, and formalized contribution guidelines. Security hardening has addressed SSTI and Path Traversal risks, while operational visibility was improved through explicit error logging for Git failures. Most recently, the project adopted Conventional Commits and refined its internal version bumping logic and performance optimizations.
+
+### This Commit's Contribution
+
+- Modernized the documentation landing page and refined navigation architecture into dedicated Guide and Reference sections for improved UX.
+- Enabled advanced Material for MkDocs features including sticky tabs, search suggestions, and code tooltips to enhance technical readability.
+- Integrated `mkdocs-glightbox` for image zooming and `mkdocs-git-revision-date-localized-plugin` to provide automated content freshness indicators.
+- Adopted the "recommended" Material configuration, incorporating HTML minification and updated plugin settings for better site performance.
+- Enhanced the automated API reference by enabling detailed symbol type headings and Table of Contents integration via `mkdocstrings`.
+- Resolved documentation build warnings by correcting the `git-revision-date-localized` plugin configuration and added missing development dependencies.
+
+---
+
+## Commit 0629932f | 2026-03-16T23:22:32.327Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust development foundation was established, including a `pytest` suite with 74% coverage and formalized contribution guidelines. Security hardening addressed SSTI and Path Traversal risks. Most recently, the documentation was modernized with Material for MkDocs enhancements, including a new landing page, refined navigation, and advanced technical discovery features like interactive API references and search suggestions.
+
+### This Commit's Contribution
+
+- Fixed a broken logo configuration in `mkdocs.yml` by correctly nesting the logo path under `theme.icon`.
+- Rewrote `README.md` to explicitly define the project's origin as a solution for "False Positive" version bumps in complex `uv` workspaces.
+- Documented the core differentiator: **Directory-Specific Patching**, which re-calculates Git distance by filtering history to the package subdirectory.
+- Synced the documentation landing page with the new README content to ensure a consistent narrative across the repository and site.
+- Referenced the discussion in [ninoseki/uv-dynamic-versioning#81](https://github.com/ninoseki/uv-dynamic-versioning/issues/81) to provide technical context for the implementation's necessity.
+
+---
+
+## Commit e78feeb2 | 2026-03-16T23:24:25.323Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust development foundation includes a `pytest` suite with 74% coverage and formalized contribution guidelines. Security hardening addressed SSTI and Path Traversal risks. The documentation is built with Material for MkDocs, featuring automated API references and a clear technical narrative explaining the project's core differentiator: directory-specific git history filtering to prevent false-positive version bumps.
+
+### This Commit's Contribution
+
+- Added Antigravity as a co-author in `pyproject.toml` to acknowledge the agent's contributions to the codebase, documentation, and architectural refinements.
+- Formalized the collaborative development state of the project within the package metadata.
