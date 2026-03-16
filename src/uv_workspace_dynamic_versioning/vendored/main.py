@@ -8,7 +8,7 @@ from pathlib import Path
 import tomlkit
 from dunamai import _VALID_PEP440, _VALID_PVP, _VALID_SEMVER, Style, Version
 
-from uv_workspace_dynamic_versioning.template import render_template
+from .template import render_template
 
 from . import schemas
 
