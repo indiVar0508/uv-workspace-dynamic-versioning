@@ -1,7 +1,7 @@
 # uv-workspace-dynamic-versioning
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/squidfunk/mkdocs-material/master/src/assets/logo.svg" width="100" />
+  <img src="https://squidfunk.github.io/mkdocs-material/assets/logo.png" width="100" />
 </p>
 
 <p align="center">
