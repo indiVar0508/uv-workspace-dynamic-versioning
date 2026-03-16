@@ -248,3 +248,11 @@ The project is a `hatch` extension for `uv` workspaces using `hatchling` and `du
 
 - Added Antigravity as a co-author in `pyproject.toml` to acknowledge the agent's contributions to the codebase, documentation, and architectural refinements.
 - Formalized the collaborative development state of the project within the package metadata.
+
+---
+
+## Commit ec1a974d | 2026-03-16T23:42:12.301Z
+
+### Merge from ci-cd-workflow
+
+Integrated CI/CD workflow with GitHub Actions. Standardized linting with Ruff and testing with Pytest. Configured automated PyPI publishing on tag creation. All changes merged into main.

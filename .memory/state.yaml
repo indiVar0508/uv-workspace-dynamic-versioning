@@ -1,10 +1,10 @@
-active_branch: "ci-cd-workflow"
+active_branch: main
 initialized: "2026-03-16T22:17:27Z"
 last_commit:
   branch: main
-  hash: e78feeb2
-  timestamp: "2026-03-16T23:24:25.323Z"
-  summary: "chore(repo): add Antigravity as co-author in pyproject.toml"
+  hash: ec1a974d
+  timestamp: "2026-03-16T23:42:12.301Z"
+  summary: "Merge from ci-cd-workflow"
 sessions:
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-16T22-17-11-584Z_cf26c542-00f8-4841-9174-7ef2aebb0c3f.jsonl"
     branch: main
@@ -13,5 +13,5 @@ sessions:
     branch: main
     started: "2026-03-16T23:31:56.451Z"
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-16T23-34-16-409Z_cbcba5d0-f860-4d6f-ac72-f2a995caa4e3.jsonl"
-    branch: "ci-cd-workflow"
+    branch: main
     started: "2026-03-16T23:34:16.456Z"
