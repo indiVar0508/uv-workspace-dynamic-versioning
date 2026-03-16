@@ -1,6 +1,8 @@
 from hatchling.plugin import hookimpl
+
 from .plugin import DynamicWorkspaceVersionSource
 from .vendored.metadata_hook import DependenciesMetadataHook
+
 
 @hookimpl
 def hatch_register_version_source():
