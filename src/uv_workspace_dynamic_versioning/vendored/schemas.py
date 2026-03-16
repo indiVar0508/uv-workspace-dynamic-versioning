@@ -99,7 +99,7 @@ class UvWorkspaceDynamicVersioning:
     vcs: Vcs = Vcs.Any
     metadata: bool | None = None
     tagged_metadata: bool = False
-    dirty: bool = False
+    dirty: bool | None = None
     pattern: str = "default"
     pattern_prefix: str | None = None
     format: str | None = None
@@ -132,8 +132,8 @@ class UvWorkspaceDynamicVersioning:
             raise ValueError("tagged-metadata must be a boolean")
 
     def _validate_dirty(self):
-        if not isinstance(self.dirty, bool):
-            raise ValueError("dirty must be a boolean")
+        if self.dirty is not None and not isinstance(self.dirty, bool):
+            raise ValueError("dirty must be a boolean or None")
 
     def _validate_latest_tag(self):
         if not isinstance(self.latest_tag, bool):

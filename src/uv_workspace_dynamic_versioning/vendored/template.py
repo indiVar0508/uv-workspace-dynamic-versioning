@@ -7,6 +7,7 @@ from datetime import datetime
 from importlib import import_module
 
 import jinja2
+import jinja2.sandbox
 from dunamai import (
     Version,
     bump_version,
@@ -60,7 +61,6 @@ def render_template(
         "major": base_part(version.base, 0),
         "minor": base_part(version.base, 1),
         "patch": base_part(version.base, 2),
-        "env": os.environ,
         "bump_version": bump_version,
         "serialize_pep440": serialize_pep440,
         "serialize_pvp": serialize_pvp,
@@ -76,4 +76,5 @@ def render_template(
             else:
                 custom_context[entry.module] = module
 
-    return jinja2.Template(template).render(**default_context, **custom_context)
+    env = jinja2.sandbox.SandboxedEnvironment()
+    return env.from_string(template).render(**default_context, **custom_context)

@@ -63,43 +63,37 @@ def _get_from_file_version(config: schemas.UvWorkspaceDynamicVersioning) -> str 
     return str(result.group(1))
 
 
-def _patch_version_serialize(
-    version: Version, config: schemas.UvWorkspaceDynamicVersioning
-) -> Version:
-    # FIXME: a dirty hack to override serialize method
-    #        __str__ uses self.serialize() internally,
-    #        so we need to override it to apply config based parameters in the hooks
-    version.serialize = partial(  # type: ignore
-        version.serialize,
-        metadata=config.metadata,
-        style=config.style,
-        dirty=config.dirty,
-        tagged_metadata=config.tagged_metadata,
-        format=config.format,
-        escape_with=config.escape_with,
-        commit_prefix=config.commit_prefix,
-    )
-    return version
-
-
-
 import subprocess
 def patch_version_for_directory(version: Version, path: Path) -> Version:
+    """
+    Patches a Dunamai Version object to reflect the history of a specific subdirectory.
+
+    In a monorepo/workspace, the root git distance and commit hash might not
+    reflect changes to a specific package. This function re-calculates the
+    distance and latest commit by filtering git history to the provided path.
+
+    Args:
+        version (Version): The original version object from Dunamai.
+        path (Path): The directory path to filter history by.
+
+    Returns:
+        Version: The updated version object with directory-specific metadata.
+    """
     matched_tag = getattr(version, "_matched_tag", None)
-    
+
     try:
         if matched_tag:
             rev_list_cmd = ["git", "rev-list", f"{matched_tag}..HEAD", "--", str(path)]
             out = subprocess.check_output(rev_list_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
             distance = len(out.splitlines()) if out else 0
-            
+
             log_cmd = ["git", "log", "-1", "--format=%H", f"{matched_tag}..HEAD", "--", str(path)]
             commit_out = subprocess.check_output(log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
         else:
             rev_list_cmd = ["git", "rev-list", "HEAD", "--", str(path)]
             out = subprocess.check_output(rev_list_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
             distance = len(out.splitlines()) if out else 0
-            
+
             log_cmd = ["git", "log", "-1", "--format=%H", "HEAD", "--", str(path)]
             commit_out = subprocess.check_output(log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
 
@@ -115,7 +109,7 @@ def patch_version_for_directory(version: Version, path: Path) -> Version:
         version.dirty = bool(status_out)
     except Exception:
         pass
-        
+
     return version
 
 def _get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path) -> Version:
@@ -140,25 +134,43 @@ def _get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path
 
 
 def get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path) -> tuple[str, Version]:
+    """
+    Calculates and serializes the project version.
+
+    This is the core logic for version retrieval. It handles:
+    1. Environment variable bypass (`UV_DYNAMIC_VERSIONING_BYPASS`).
+    2. Version retrieval from a file (`from-file` config).
+    3. VCS-based version detection via Dunamai.
+    4. Directory-specific history patching.
+    5. Version bumping and formatting (Jinja2 or Dunamai style).
+
+    Args:
+        config (UvWorkspaceDynamicVersioning): The plugin configuration.
+        project_dir (Path): The root directory of the project.
+
+    Returns:
+        tuple[str, Version]: A tuple of (serialized_version_string, Version_object).
+    """
     bypassed = _get_bypassed_version()
     if bypassed:
         parsed = Version.parse(bypassed, pattern=config.pattern)
-        return bypassed, _patch_version_serialize(parsed, config)
+        return bypassed, parsed
 
     from_file = _get_from_file_version(config)
     if from_file:
         parsed = Version.parse(from_file, pattern=config.pattern)
-        return from_file, _patch_version_serialize(parsed, config)
+        return from_file, parsed
 
     got = _get_version(config, project_dir)
     got = patch_version_for_directory(got, project_dir)
-    version = _patch_version_serialize(got, config)
+    
+    effective_dirty = config.dirty if config.dirty is not None else got.dirty
 
     if config.format_jinja:
         updated = (
-            version.bump(index=config.bump_config.index)
-            if config.bump_config.enable and version.distance > 0
-            else version
+            got.bump(index=config.bump_config.index)
+            if config.bump_config.enable and got.distance > 0
+            else got
         )
         serialized = render_template(
             config.format_jinja, version=updated, config=config
@@ -167,10 +179,18 @@ def get_version(config: schemas.UvWorkspaceDynamicVersioning, project_dir: Path)
             check_version_style(serialized, config.style)
     else:
         updated = (
-            version.bump(smart=True, index=config.bump_config.index)
+            got.bump(smart=True, index=config.bump_config.index)
             if config.bump_config.enable
-            else version
+            else got
         )
-        serialized = updated.serialize()
+        serialized = updated.serialize(
+            metadata=config.metadata,
+            style=config.style,
+            dirty=effective_dirty,
+            tagged_metadata=config.tagged_metadata,
+            format=config.format,
+            escape_with=config.escape_with,
+            commit_prefix=config.commit_prefix,
+        )
 
     return (serialized, updated)
