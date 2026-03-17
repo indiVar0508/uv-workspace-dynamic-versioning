@@ -77,6 +77,7 @@ nav:
     - Configuration: configuration.md
   - Reference:
     - API: api.md
+    - Changelog: CHANGELOG.md
     - Contributing: contributing_link.md
 
 markdown_extensions:
