@@ -12,7 +12,8 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - Core logic handles VCS-based versioning with directory-specific git history patching.
 - Enhanced documentation with `mkdocs-material`, `mkdocstrings`, and high-quality docstrings.
 - Test coverage reached **74%** with unit tests for configuration, versioning, and metadata hooks.
-- **v0.0.1** released on PyPI via GitHub Actions with Trusted Publisher (OpenID Connect).
+- **v0.1.0** released on PyPI via GitHub Actions with Trusted Publisher (OpenID Connect).
+- Metadata in `pyproject.toml` updated for better discoverability and maintainability.
 
 ## Key Decisions Made
 - **Build Backend:** Using `hatchling`.
@@ -35,7 +36,7 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - [x] High-quality Documentation (UX + API).
 - [x] 74%+ Test Coverage.
 - [x] Security Hardening (SSTI + Path Traversal).
-- [x] Initial release (v0.0.1).
+- [x] Initial release (v0.1.0).
 
 ## Open Questions
 - How to handle the transition to MkDocs 2.0 when it becomes stable?
