@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-03-28
+
+### Added
+- Comprehensive test suite in `tests/test_full_coverage.py`, increasing coverage to **92%**.
+- Automated security scanning with Bandit in the CI pipeline.
+- Programmatic build validation script `scripts/validate_build.py` for CI safety.
+- Hybrid workspace example in `examples/06-hybrid-workspace` demonstrating `uv-dynamic-versioning` + `uv-workspace-dynamic-versioning`.
+
+### Fixed
+- Fixed critical `KeyError: 'any'` caused by un-normalized default values in Pydantic schemas.
+- Fixed `TOMLDecodeError` in build scripts by properly escaping regex backslashes in generated TOML.
+- Fixed directory-specific Git history patching to use correct relative path filters.
+- Fixed test failures resulting from strict Enum normalization.
+- Corrected `.gitignore` to properly exclude all Python cache files (`__pycache__`, `.pyc`).
+
+### Changed
+- Unified CI/CD workflow: Publishing to PyPI now requires successful completion of linting, security scans, and build validation.
+- Modernized type annotations across the codebase to use Python 3.10+ `|` syntax.
+- Updated documentation with industry best practices for release management and monorepo architectures.
+
+## [0.1.2] - 2026-03-28 [YANKED]
+
+### Added
+- Initial Pydantic v2 migration.
+- Basic hybrid workspace example.
+
+### Fixed
+- Improved directory-specific patching logic.
+
 ## [0.1.1] - 2026-03-22
 
 ### Fixed
