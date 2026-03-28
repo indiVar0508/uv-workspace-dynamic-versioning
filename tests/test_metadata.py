@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from pathlib import Path
+
 from uv_workspace_dynamic_versioning.metadata_hook import DependenciesMetadataHook
-from uv_workspace_dynamic_versioning.schemas import MetadataHookConfig
 
 
 class MockVersion:
@@ -37,8 +36,10 @@ dependencies = ["other-pkg=={{ version.base }}", "common~={{ major }}.{{ minor }
 
     # Mock get_version to return a version object
     from uv_workspace_dynamic_versioning import version_source
+
     def mock_get_version(config, root):
         from dunamai import Version
+
         v = Version("1.2.3")
         return "1.2.3", v
 
@@ -66,8 +67,10 @@ optional-dependencies = { dev = ["pytest=={{ version.base }}"] }
     hook = DependenciesMetadataHook(tmp_path, {})
 
     from uv_workspace_dynamic_versioning import version_source
+
     def mock_get_version(config, root):
         from dunamai import Version
+
         v = Version("1.2.3")
         return "1.2.3", v
 

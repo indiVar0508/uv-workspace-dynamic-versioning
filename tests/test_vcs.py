@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import subprocess
-from pathlib import Path
 
 import pytest
-from dunamai import Version
 
 from uv_workspace_dynamic_versioning.schemas import PluginConfig
 from uv_workspace_dynamic_versioning.version_source import get_version

@@ -92,8 +92,11 @@ source = "uv-workspace-dynamic-versioning"
             cwd=self.repo_dir,
             capture_output=True,
             text=True,
-            check=True,
         )
+        if result.returncode != 0:
+            print(f"STDOUT: {result.stdout}")
+            print(f"STDERR: {result.stderr}")
+            result.check_returncode()
         return result.stdout.strip()
 
     def test_basic_versioning(self):

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
+import subprocess  # nosec B404
 import sys
 from functools import cached_property
 from pathlib import Path
@@ -190,13 +190,15 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
             log_cmd = ["git", "log", "-1", "--format=%H", "HEAD", "--", "."]
 
         # Get commit distance for this directory
-        # nosec: subprocess call is safe because we use list-based arguments and no shell=True.
-        rev_out = subprocess.check_output(rev_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
+        rev_out = subprocess.check_output(  # nosec B603
+            rev_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
+        ).strip()
         distance = len(rev_out.splitlines()) if rev_out else 0
 
         # Get latest commit for this directory
-        # nosec: subprocess call is safe
-        commit_out = subprocess.check_output(log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
+        commit_out = subprocess.check_output(  # nosec B603
+            log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
+        ).strip()
 
         if commit_out:
             commit_len = len(version.commit) if version.commit else 7
@@ -208,8 +210,9 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
 
         # Check if directory is dirty
         status_cmd = ["git", "status", "--porcelain", "--", "."]
-        # nosec: subprocess call is safe
-        status_out = subprocess.check_output(status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
+        status_out = subprocess.check_output(  # nosec B603
+            status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
+        ).strip()
         version.dirty = bool(status_out)
 
     except Exception as e:
