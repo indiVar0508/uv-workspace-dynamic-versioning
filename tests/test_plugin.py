@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-import os
-import subprocess
-import tempfile
-from pathlib import Path
-
 import pytest
 
 from uv_workspace_dynamic_versioning.schemas import PluginConfig, load_project_config
