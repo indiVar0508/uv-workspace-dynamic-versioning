@@ -10,16 +10,16 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - **Improved Accuracy**: Fixed directory-specific patching logic to use localized path filters, preventing version "bleeding" between workspace packages.
 - **Enhanced Quality**: Reached **92%** test coverage with comprehensive tests for edge cases and error handling.
 - **Security Gated CI**: Unified CI/CD pipeline ensures that PyPI releases only happen after passing linting, Bandit security scans, and programmatic build validation.
-- **Supply Chain Security**: Integrated `actions/attest-build-provenance` with immutable commit SHA pinning to generate verifiable SLSA build provenance for all release artifacts, starting with `v0.1.4`.
-- **Documentation**: Updated with industry best practices for monorepos, release tagging, and hybrid workspace architectures. Linked SLSA badge to GitHub attestations verification page.
+- **v0.1.4 Status**: Prepared for release with SLSA build provenance but **STRICTLY UNRELEASED** pending user approval and manual tagging.
+- **Security Protocols**: Updated maintainer protocols to ensure zero-automated-tagging. All releases must be initiated by the user.
 
 ## Maintainer Role & Accountability
 As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsible for:
 1.  **Code Stewardship**: Ensuring the Python implementation follows PEP 8, is type-safe, and utilizes the latest language features (Python 3.10+).
 2.  **Package Integrity**: Managing `pyproject.toml` metadata, dependencies, and entry points.
 3.  **Security Advocacy**: Enforcing sandboxing for Jinja2, preventing path traversal, and auditing all `subprocess` interactions.
-4.  **Release Preparation**: Curating `CHANGELOG.md` and preparing metadata for releases. **I am STRICTLY FORBIDDEN from creating Git tags or pushing tags to remote branches without explicit, one-time permission from the user for every single release.**
-5.  **Branch Management**: I may push to feature branches or `main` (if instructed), but NEVER to tags.
+4.  **Release Preparation**: Curating `CHANGELOG.md` and preparing metadata for releases. **I am STRICTLY FORBIDDEN from creating Git tags or pushing tags to remote branches.**
+5.  **Branch Management**: I may push to feature branches or `main` (if instructed), but **ALWAYS MUST ask for permission before any remote push.**
 6.  **Security First**: Hardening supply chain security by pinning all project and build-system dependencies to exact versions and using immutable commit SHAs for all GitHub Actions to ensure deterministic and verifiable builds.
 
 ## Key Decisions Made
