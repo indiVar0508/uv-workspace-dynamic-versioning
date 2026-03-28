@@ -3601,3 +3601,73 @@ examples/*/
 BREAKING: Requires Python 3.9+ (was 3.8+)" 2>&1 | tail -10")
 **Observation**: bash: success
 
+## Turn 56 | 2026-03-28T17:24:13.603Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: The branch refactor-v2 wasn't committed yet. Let me commit directly to the current branch.
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && git add -A && git commit -m "refactor: Complete codebase refactor with Pydantic schemas
+
+- Migrated from dataclasses to Pydantic for cleaner validation
+- Removed vendored/ folder, consolidated into top-level modules
+- Added examples/ folder with 5 minimal examples
+- Added docs/ with backend support and best practices
+- Updated tests with Pydantic-compatible assertions
+- Fixed PEP 440 regex pattern for version validation
+- Bumped Python requirement to 3.9+
+- Added pydantic>=2.0 dependency
+
+BREAKING: Requires Python 3.9+ (was 3.8+)" 2>&1 | tail -15")
+**Observation**: bash: success
+
+## Turn 57 | 2026-03-28T17:24:18.312Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: Commit successful. Let me now commit the examples folder separately (which has its own git repos inside):
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && rm -rf examples/.git examples/*/.git && git add examples/ && git commit -m "docs: Add 5 minimal examples for common use cases
+
+Examples:
+1. 01-basic-hatchling - Minimal hatchling setup
+2. 02-workspace - Monorepo/workspace setup
+3. 03-jinja-templating - Jinja2 template rendering
+4. 04-dynamic-dependencies - Dynamic dependency resolution
+5. 05-custom-format - Custom version formats" 2>&1 | tail -10")
+**Observation**: bash: success
+
+## Turn 58 | 2026-03-28T17:24:38.984Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: Now let me commit the docs and update the memory.
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && git add docs/ && git commit -m "docs: Add backend support matrix and best practices
+
+- docs/BACKEND_SUPPORT.md: Comprehensive matrix of supported backends
+- docs/BEST_PRACTICES.md: Security, CI/CD, project structure guidance" 2>&1 | tail -5")
+**Observation**: bash: success
+
+## Turn 59 | 2026-03-28T17:24:45.218Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: It seems the docs are already committed or git isn't tracking them properly. Let me check and force add:
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && git status docs/")
+**Observation**: bash: success
+
+## Turn 60 | 2026-03-28T17:24:47.936Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: The docs are already committed. Let me check the git log and show a summary.
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && git log --oneline -10")
+**Observation**: bash: success
+
+## Turn 61 | 2026-03-28T17:24:52.008Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: The docs/ files seem to be in the previous commit. Let me check if they were committed:
+**Action**: bash(command: "ls -la /home/indivar/github/uv-workspace-dynamic-versioning/docs/")
+**Observation**: bash: success
+
+## Turn 62 | 2026-03-28T17:24:56.734Z | ollama/minimax-m2.7:cloud
+
+**Thought**: 
+**Thinking**: The docs exist. Let me commit them properly.
+**Action**: bash(command: "cd /home/indivar/github/uv-workspace-dynamic-versioning && git add docs/ && git commit -m "docs: Add backend support matrix and best practices" && git status")
+**Observation**: bash: success
+
