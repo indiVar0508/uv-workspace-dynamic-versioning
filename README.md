@@ -1,10 +1,6 @@
 # uv-workspace-dynamic-versioning
 
 <p align="center">
-  <img src="https://squidfunk.github.io/mkdocs-material/assets/logo.png" width="100" />
-</p>
-
-<p align="center">
   <em>A powerful Hatch plugin for dynamic versioning and dependency injection in uv workspaces.</em>
 </p>
 
