@@ -30,49 +30,39 @@ class TestBuildValidation(unittest.TestCase):
         shutil.rmtree(self.tmp_dir)
 
     def create_project(self, name="test-pkg", config=None):
-        pyproject = {
-            "project": {
-                "name": name,
-                "dynamic": ["version"],
-                "requires-python": ">=3.9",
-            },
-            "build-system": {
-                "requires": ["hatchling", f"uv-workspace-dynamic-versioning @ {self.plugin_path}"],
-                "build-backend": "hatchling.build",
-            },
-            "tool": {
-                "hatch": {"version": {"source": "uv-workspace-dynamic-versioning"}},
-            },
-        }
-
+        # Use tomlkit for safe TOML generation
+        import tomlkit
+        
+        doc = tomlkit.document()
+        
+        project = tomlkit.table()
+        project.add("name", name)
+        project.add("dynamic", ["version"])
+        project.add("requires-python", ">=3.9")
+        doc.add("project", project)
+        
+        build_system = tomlkit.table()
+        build_system.add("requires", ["hatchling", f"uv-workspace-dynamic-versioning @ {self.plugin_path}"])
+        build_system.add("build-backend", "hatchling.build")
+        doc.add("build-system", build_system)
+        
+        tool = tomlkit.table()
+        hatch = tomlkit.table()
+        version = tomlkit.table()
+        version.add("source", "uv-workspace-dynamic-versioning")
+        hatch.add("version", version)
+        tool.add("hatch", hatch)
+        
         if config:
-            pyproject["tool"]["uv-workspace-dynamic-versioning"] = config
-
-        # Create pyproject.toml
-        content = f"""
-[project]
-name = "{name}"
-dynamic = ["version"]
-requires-python = ">=3.9"
-
-[build-system]
-requires = ["hatchling", "uv-workspace-dynamic-versioning @ {self.plugin_path}"]
-build-backend = "hatchling.build"
-
-[tool.hatch.version]
-source = "uv-workspace-dynamic-versioning"
-"""
-        if config:
-            content += "\n[tool.uv-workspace-dynamic-versioning]\n"
+            plugin_config = tomlkit.table()
             for k, v in config.items():
-                if isinstance(v, bool):
-                    v = str(v).lower()
-                elif isinstance(v, str):
-                    v = f'"{v}"'
-                content += f"{k.replace('_', '-')} = {v}\n"
+                plugin_config.add(k.replace('_', '-'), v)
+            tool.add("uv-workspace-dynamic-versioning", plugin_config)
+            
+        doc.add("tool", tool)
 
         with open(self.repo_dir / "pyproject.toml", "w") as f:
-            f.write(content)
+            f.write(tomlkit.dumps(doc))
 
         # Create source
         src_dir = self.repo_dir / "src" / name.replace("-", "_")

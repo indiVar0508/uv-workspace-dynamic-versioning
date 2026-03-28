@@ -182,6 +182,7 @@ class PluginConfig(BaseModel):
     model_config = {
         "extra": "ignore",
         "populate_by_name": True,
+        "validate_default": True,
     }
 
 

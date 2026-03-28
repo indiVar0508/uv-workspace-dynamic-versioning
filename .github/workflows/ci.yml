@@ -67,8 +67,8 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install hatch
-      run: pip install hatch
+    - name: Install hatch and dependencies
+      run: pip install hatch tomlkit
 
     - name: Run build validation
       run: python scripts/validate_build.py
