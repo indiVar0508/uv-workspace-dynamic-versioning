@@ -1,10 +1,10 @@
-active_branch: main
+active_branch: "refactor-v2"
 initialized: "2026-03-16T22:17:27Z"
 last_commit:
   branch: main
-  hash: ec1a974d
-  timestamp: "2026-03-16T23:42:12.301Z"
-  summary: "Merge from ci-cd-workflow"
+  hash: 0a221f67
+  timestamp: "2026-03-28T17:12:22.940Z"
+  summary: "Starting refactor of uv-workspace-dynamic-versioning: 1) Migrate to Pydantic for cleaner schema validation, 2) Create examples folder with minimal use cases, 3) Document backend support matrix, 4) Add comprehensive tests, 5) Update project structure for maintainability"
 sessions:
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-16T22-17-11-584Z_cf26c542-00f8-4841-9174-7ef2aebb0c3f.jsonl"
     branch: main
@@ -15,3 +15,24 @@ sessions:
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-16T23-34-16-409Z_cbcba5d0-f860-4d6f-ac72-f2a995caa4e3.jsonl"
     branch: main
     started: "2026-03-16T23:34:16.456Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-17T20-43-18-558Z_a75d706b-5722-4970-aaf5-716351e628c1.jsonl"
+    branch: main
+    started: "2026-03-17T20:43:18.598Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-17T21-05-16-511Z_1bb863df-06aa-4ffb-b700-12a2c04ae59a.jsonl"
+    branch: main
+    started: "2026-03-17T21:05:16.557Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-22T08-21-13-473Z_6afa92ab-62ef-4f90-8668-04c4099a91a3.jsonl"
+    branch: main
+    started: "2026-03-22T08:21:13.518Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-22T08-23-14-074Z_3cd578df-599b-423e-bd6c-5dcc427712ff.jsonl"
+    branch: main
+    started: "2026-03-22T08:23:14.148Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-28T16-47-28-493Z_5f2ae9c7-f671-4640-9f92-0046b3064fe3.jsonl"
+    branch: main
+    started: "2026-03-28T16:47:28.553Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-28T16-50-17-344Z_b017cb50-b594-4010-a276-395a7a5de2a0.jsonl"
+    branch: main
+    started: "2026-03-28T16:50:17.388Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-28T16-50-58-372Z_20e978f2-eb58-4711-8616-2b11a4978569.jsonl"
+    branch: "refactor-v2"
+    started: "2026-03-28T16:50:58.412Z"

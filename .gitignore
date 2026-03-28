@@ -1,19 +1,9 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
+# Build outputs
 dist/
-wheels/
-*.egg-info
+build/
+*.egg-info/
 
-# Virtual environments
-.venv
-.pi/memory-md
-
-# Documentation
-site/
-
-# Testing
-.pytest_cache/
-
-.memory/branches/*/log.md
+# Examples (standalone git repos)
+examples/*/
+!examples/README.md
+!examples/*/README.md

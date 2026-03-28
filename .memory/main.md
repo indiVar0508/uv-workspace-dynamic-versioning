@@ -12,7 +12,7 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - Core logic handles VCS-based versioning with directory-specific git history patching.
 - Enhanced documentation with `mkdocs-material`, `mkdocstrings`, and high-quality docstrings.
 - Test coverage reached **74%** with unit tests for configuration, versioning, and metadata hooks.
-- **v0.1.0** released on PyPI via GitHub Actions with Trusted Publisher (OpenID Connect).
+- **v0.1.1** tagged for release on PyPI, fixing the missing license issue.
 - Metadata in `pyproject.toml` updated for better discoverability and maintainability.
 
 ## Key Decisions Made

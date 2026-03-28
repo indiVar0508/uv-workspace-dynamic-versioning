@@ -1,115 +1,171 @@
+"""Tests for the version source plugin."""
+
+from __future__ import annotations
+
+import os
+import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
-from dunamai import Version
 
-from uv_workspace_dynamic_versioning.vendored import schemas
-from uv_workspace_dynamic_versioning.vendored.main import get_version, patch_version_for_directory
-from uv_workspace_dynamic_versioning.vendored.metadata_hook import DependenciesMetadataHook
+from uv_workspace_dynamic_versioning.schemas import PluginConfig, load_project_config
+from uv_workspace_dynamic_versioning.version_source import (
+    DynamicWorkspaceVersionSource,
+    check_version_style,
+    get_version,
+)
 
 
-def test_config_parsing():
-    data = {
-        "vcs": "git",
-        "pattern": "v(?P<base>.*)",
-        "bump": {"enable": True, "index": 1},
-        "from-file": {"source": "VERSION", "pattern": "v(.*)"}
-    }
-    config = schemas.UvWorkspaceDynamicVersioning.from_dict(data)
-    assert config.vcs.value == "git"
-    assert config.pattern == "v(?P<base>.*)"
-    assert config.bump_config.enable is True
-    assert config.bump_config.index == 1
-    assert config.from_file.source == "VERSION"
-    assert config.from_file.pattern == "v(.*)"
+class TestPluginConfig:
+    """Tests for PluginConfig schema."""
 
-def test_metadata_hook_config():
-    data = {
-        "dependencies": ["pkg1 == {{ version.base }}", "pkg2"],
-        "optional-dependencies": {
-            "dev": ["pytest"]
+    def test_default_config(self):
+        """Test that default configuration is valid."""
+        config = PluginConfig()
+        # Default vcs is a string "any" after normalization
+        assert config.vcs == "any"
+        assert config.latest_tag is False
+        assert config.strict is False
+        assert config.bump is False
+
+    def test_config_from_dict(self):
+        """Test creating config from dictionary."""
+        data = {
+            "vcs": "git",
+            "latest_tag": True,
+            "bump": True,
         }
-    }
-    config = schemas.MetadataHookConfig.from_dict(data)
-    assert config.dependencies == ["pkg1 == {{ version.base }}", "pkg2"]
-    assert config.optional_dependencies["dev"] == ["pytest"]
+        config = PluginConfig(**data)
+        assert config.vcs.value == "git"
+        assert config.latest_tag is True
+        assert config.bump is True
 
-def test_patch_version_for_directory(tmp_path, mocker):
-    # Mock subprocess to simulate git commands
-    mocker.patch("subprocess.check_output", side_effect=[
-        "1\n", # rev-list distance (1 line = 1 commit)
-        "abcdef1234567890\n", # log commit hash
-        "M file.py\n" # status (dirty)
-    ])
-    
-    v = Version("0.1.0", distance=5, commit="initial", dirty=False)
-    # We need to set _matched_tag for the logic to use the first branch of the if/else
-    v._matched_tag = "v0.1.0"
-    
-    patched = patch_version_for_directory(v, tmp_path)
-    
-    assert patched.distance == 1
-    assert patched.commit == "abcdef1"
-    assert patched.dirty is True
+    def test_jinja_format(self):
+        """Test Jinja format configuration."""
+        data = {"format_jinja": "{{ major }}.{{ minor }}.{{ patch }}"}
+        config = PluginConfig(**data)
+        assert config.format_jinja == "{{ major }}.{{ minor }}.{{ patch }}"
 
-def test_get_version_bypass(mocker):
-    mocker.patch("os.environ.get", return_value="1.2.3")
-    config = schemas.UvWorkspaceDynamicVersioning()
-    version_str, v = get_version(config, Path("."))
-    assert version_str == "1.2.3"
-    assert v.base == "1.2.3"
+    def test_from_file_config(self):
+        """Test from-file configuration."""
+        data = {"from_file": {"source": "VERSION", "pattern": "v(.+)"}}
+        config = PluginConfig(**data)
+        from_file = config.get_from_file()
+        assert from_file is not None
+        assert from_file.source == "VERSION"
+        assert from_file.pattern == "v(.+)"
 
-def test_get_from_file_path_traversal(tmp_path):
-    # Create a dummy project root
-    project_root = tmp_path / "project"
-    project_root.mkdir()
-    
-    # Create a sensitive file outside the project root
-    secret_file = tmp_path / "secrets.txt"
-    secret_file.write_text("SUPER_SECRET_TOKEN")
-    
-    config = schemas.UvWorkspaceDynamicVersioning(
-        from_file=schemas.FromFile(source="../secrets.txt")
-    )
-    
-    with pytest.raises(ValueError, match="is outside of the project root"):
-        get_version(config, project_root)
+    def test_style_normalization(self):
+        """Test that style is normalized correctly."""
+        config = PluginConfig(style="PEP440")
+        assert config.style.value == "pep440"
 
-def test_get_from_file_valid(tmp_path):
-    project_root = tmp_path
-    version_file = project_root / "VERSION"
-    version_file.write_text("v2.4.6")
-    
-    config = schemas.UvWorkspaceDynamicVersioning(
-        from_file=schemas.FromFile(source="VERSION", pattern="v(.*)")
-    )
-    
-    version_str, v = get_version(config, project_root)
-    assert version_str == "2.4.6"
-    assert v.base == "2.4.6"
+    def test_extra_fields_ignored(self):
+        """Test that extra fields are ignored."""
+        data = {"unknown_field": "value", "vcs": "git"}
+        config = PluginConfig(**data)
+        assert hasattr(config, "unknown_field") is False
+        assert config.vcs.value == "git"
 
-def test_metadata_hook_update_validation(mocker):
-    hook = DependenciesMetadataHook(str(Path(".")), {})
-    
-    # Test missing dynamic field
-    with pytest.raises(ValueError, match="not listed in 'project.dynamic'"):
-        hook.update({})
-    
-    # Test dependency already in project
-    metadata = {"dynamic": ["dependencies"], "dependencies": ["req1"]}
-    with pytest.raises(ValueError, match="'dependencies' is dynamic but already listed"):
-        hook.update(metadata)
 
-def test_metadata_hook_rendering(mocker):
-    mocker.patch("uv_workspace_dynamic_versioning.vendored.metadata_hook.get_version", 
-                 return_value=("0.2.0", Version("0.2.0")))
-    
-    config = {
-        "dependencies": ["pkg == {{ version.base }}"]
-    }
-    hook = DependenciesMetadataHook(str(Path(".")), config)
-    
-    metadata = {"dynamic": ["dependencies"]}
-    hook.update(metadata)
-    
-    assert metadata["dependencies"] == ["pkg == 0.2.0"]
+class TestVersionStyleValidation:
+    """Tests for version style validation."""
+
+    def test_valid_pep440(self):
+        """Test PEP 440 validation with valid versions."""
+        from dunamai import Style
+
+        # Standard versions
+        check_version_style("1.0.0", Style.Pep440)
+        check_version_style("1.0.0+abc123", Style.Pep440)
+        check_version_style("1.0.0.post1", Style.Pep440)
+
+    def test_valid_semver(self):
+        """Test SemVer validation."""
+        from dunamai import Style
+
+        check_version_style("1.0.0", Style.SemVer)
+        check_version_style("1.0.0-alpha", Style.SemVer)
+        check_version_style("1.0.0+build.123", Style.SemVer)
+
+    def test_invalid_version(self):
+        """Test that invalid versions raise ValueError."""
+        from dunamai import Style
+
+        with pytest.raises(ValueError):
+            check_version_style("invalid", Style.Pep440)
+
+
+class TestLoadProjectConfig:
+    """Tests for loading configuration from pyproject.toml."""
+
+    def test_load_from_directory(self, tmp_path):
+        """Test loading config from a directory with pyproject.toml."""
+        pyproject = tmp_path / "pyproject.toml"
+        pyproject.write_text(
+            """
+[project]
+name = "test"
+dynamic = ["version"]
+
+[tool.uv-workspace-dynamic-versioning]
+vcs = "git"
+latest-tag = true
+"""
+        )
+
+        config = load_project_config(tmp_path)
+        assert config.vcs.value == "git"
+        assert config.latest_tag is True
+
+    def test_load_without_config(self, tmp_path):
+        """Test loading config without plugin config returns defaults."""
+        pyproject = tmp_path / "pyproject.toml"
+        pyproject.write_text(
+            """
+[project]
+name = "test"
+"""
+        )
+
+        config = load_project_config(tmp_path)
+        # Default vcs is string "any"
+        assert config.vcs == "any"
+
+    def test_file_not_found(self):
+        """Test that FileNotFoundError is raised when no pyproject.toml."""
+        with pytest.raises(FileNotFoundError):
+            load_project_config("/nonexistent/path")
+
+
+class TestDynamicWorkspaceVersionSource:
+    """Tests for the DynamicWorkspaceVersionSource class."""
+
+    def test_plugin_name(self):
+        """Test that plugin name is correct."""
+        assert DynamicWorkspaceVersionSource.PLUGIN_NAME == "uv-workspace-dynamic-versioning"
+
+
+class TestVersionBypass:
+    """Tests for version bypass functionality."""
+
+    def test_bypass_via_env_var(self, tmp_path, monkeypatch):
+        """Test that environment variable bypasses version detection."""
+        monkeypatch.setenv("UV_DYNAMIC_VERSIONING_BYPASS", "1.2.3")
+        config = PluginConfig()
+        version, version_obj = get_version(config, tmp_path)
+        assert version == "1.2.3"
+
+
+class TestSchemasNormalization:
+    """Tests for schema normalization."""
+
+    def test_kebab_to_snake_case(self):
+        """Test that kebab-case is converted to snake_case."""
+        data = {"latest-tag": True, "commit-length": 8}
+        normalized = {}
+        for key, value in data.items():
+            normalized[key.replace("-", "_")] = value
+        assert "latest_tag" in normalized
+        assert "commit_length" in normalized

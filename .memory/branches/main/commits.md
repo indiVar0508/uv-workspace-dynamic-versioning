@@ -256,3 +256,85 @@ The project is a `hatch` extension for `uv` workspaces using `hatchling` and `du
 ### Merge from ci-cd-workflow
 
 Integrated CI/CD workflow with GitHub Actions. Standardized linting with Ruff and testing with Pytest. Configured automated PyPI publishing on tag creation. All changes merged into main.
+
+---
+
+## Commit b21376ff | 2026-03-22T08:24:46.293Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project was established as a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust development foundation includes a `pytest` suite with 74% coverage and Material-themed documentation with automated API references. The project has adopted Conventional Commits and implemented critical security hardening for SSTI and Path Traversal risks. Most recently, the CI/CD pipeline was integrated into `main` to support automated linting, testing, and PyPI publishing.
+
+### This Commit's Contribution
+
+- Successfully released **v0.1.0** to PyPI via GitHub Actions using OpenID Connect (OIDC) Trusted Publishers.
+- Restructured the CI/CD pipeline by splitting the monolithic workflow into specialized `ci.yml` (lint/test) and `publish.yml` (release) to improve triggering logic and security separation.
+- Configured the GitHub `pypi` environment to manage release permissions and provide deployment tracking.
+- Established a `CHANGELOG.md` following the "Keep a Changelog" standard and integrated it into the MkDocs documentation.
+- Performed a strategic git history reset and force-push to ensure the v0.1.0 release commit is atomic and contains all necessary metadata (changelog, workflow updates).
+- Acknowledged and recorded the user's preference to address the agent as "pi" within the session context.
+- Verified successful package visibility and version availability on PyPI following deployment.
+
+---
+
+## Commit 63b6aa11 | 2026-03-22T08:26:55.214Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust foundation includes a `pytest` suite with 74% coverage, Material-themed documentation with automated API references, and security hardening against SSTI and Path Traversal risks. The project adopted Conventional Commits and integrated a CI/CD pipeline for automated linting and testing. Most recently, the project successfully released **v0.1.0** to PyPI via GitHub Actions using OIDC Trusted Publishers, establishing a `CHANGELOG.md` and restructuring the release workflow for improved security and deployment tracking.
+
+### This Commit's Contribution
+
+- Enhanced `pyproject.toml` with comprehensive metadata to improve PyPI discoverability and maintenance.
+- Explicitly defined the project license as **MIT** and added standard PyPI classifiers for development status and audience.
+- Included descriptive keywords (`uv`, `workspace`, `hatch`, etc.) to assist with search indexing.
+- Expanded `project.urls` to include dedicated links for Documentation, Repository, and Issue tracking.
+- Ensured metadata consistency across the package configuration following the v0.1.0 release.
+
+---
+
+## Commit 5a1f3778 | 2026-03-22T08:28:33.614Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary project memory for the development of `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces using `hatchling` and `dunamai` for VCS-powered versioning, featuring monorepo-specific history patching and dynamic dependency injection via sandboxed Jinja2 templates. A robust foundation includes a `pytest` suite with 74% coverage, Material-themed documentation with automated API references, and security hardening against SSTI and Path Traversal risks. The project adopted Conventional Commits and integrated a CI/CD pipeline for automated linting and testing. Most recently, the project successfully released **v0.1.0** to PyPI via GitHub Actions using OIDC Trusted Publishers, and enhanced its metadata in `pyproject.toml` with explicit licensing, keywords, and project URLs to improve discoverability.
+
+### This Commit's Contribution
+
+- Bumped project version to `v0.1.1` and tagged the commit to remediate the missing license in the initial PyPI release.
+- Updated `CHANGELOG.md` to record the fix for the missing license and the addition of comprehensive metadata to `pyproject.toml`.
+- Prepared the repository for an automated release via the CI/CD pipeline by ensuring all metadata and documentation reflect the latest changes.
+- Consolidated metadata enhancements into a formal release cycle to ensure PyPI discoverability is maximized for the next version.
+
+---
+
+## Commit 0a221f67 | 2026-03-28T17:12:22.940Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary development and memory track for `uv-workspace-dynamic-versioning`, a `hatch` plugin designed to automate version management and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project provides a `hatch` extension for `uv` workspaces that automates versioning and dependency injection using `hatchling` and `dunamai`. It features directory-specific Git history filtering for accurate monorepo versioning and utilizes sandboxed Jinja2 templates for dynamic dependency updates. A robust foundation was established with a `pytest` suite (74% coverage), Material-themed documentation with automated API references, and critical security hardening against SSTI and Path Traversal risks. The project reached a stable v0.1.1 release on PyPI with enhanced metadata, OIDC-based CI/CD workflows for automated testing and publishing, and adherence to Conventional Commit standards.
+
+### This Commit's Contribution
+
+- Verified through extensive testing that the plugin works exclusively with `hatchling`-based build backends due to its reliance on the Hatch plugin entry-point system.
+- Confirmed that `uv build --all` successfully triggers dynamic versioning for workspace members when they are correctly configured to use `hatchling` as their build-backend.
+- Initiated a major architectural refactor to migrate configuration validation from manual dictionary checks to Pydantic for more robust schema management.
+- Decided to consolidate and restructure the `vendored/` directory to improve internal code organization and maintainability.
+- Established a plan for a dedicated `examples/` folder to demonstrate minimal use cases for workspace setup and backend configuration.
+- Identified the necessity of a "Backend Support Matrix" in the documentation to explicitly clarify why `setuptools`, `flit`, and `pdm` are not natively supported.
