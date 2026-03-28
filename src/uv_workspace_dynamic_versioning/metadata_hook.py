@@ -60,10 +60,7 @@ class DependenciesMetadataHook(MetadataHookInterface):
             return None
 
         config = load_project_config(self.root)
-        return [
-            render_jinja_template(dep, version=self.version, config=config)
-            for dep in deps
-        ]
+        return [render_jinja_template(dep, version=self.version, config=config) for dep in deps]
 
     def render_optional_dependencies(self) -> dict[str, list[str]] | None:
         """Render optional dependency templates with version information.
@@ -78,10 +75,7 @@ class DependenciesMetadataHook(MetadataHookInterface):
 
         config = load_project_config(self.root)
         return {
-            group: [
-                render_jinja_template(dep, version=self.version, config=config)
-                for dep in deps
-            ]
+            group: [render_jinja_template(dep, version=self.version, config=config) for dep in deps]
             for group, deps in opt_deps.items()
         }
 
@@ -110,22 +104,16 @@ class DependenciesMetadataHook(MetadataHookInterface):
 
         # Check consistency between dynamic and project
         if is_dynamic_deps and "dependencies" in metadata:
-            raise ValueError(
-                "'dependencies' is dynamic but already listed in [project]."
-            )
+            raise ValueError("'dependencies' is dynamic but already listed in [project].")
 
         if is_dynamic_opt_deps and "optional-dependencies" in metadata:
-            raise ValueError(
-                "'optional-dependencies' is dynamic but already listed in [project]."
-            )
+            raise ValueError("'optional-dependencies' is dynamic but already listed in [project].")
 
         # Check that we have something to render
         has_deps = self.hook_config.dependencies is not None
         has_opt_deps = self.hook_config.optional_dependencies is not None
         if not (has_deps or has_opt_deps):
-            raise ValueError(
-                "No dependencies or optional-dependencies found in the plugin config."
-            )
+            raise ValueError("No dependencies or optional-dependencies found in the plugin config.")
 
         # Render and inject dependencies
         rendered_deps = self.render_dependencies()

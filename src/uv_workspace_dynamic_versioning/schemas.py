@@ -7,7 +7,7 @@ supporting both kebab-case (TOML) and snake_case (Python) field names.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 from dunamai import Style, Vcs
 from pydantic import BaseModel, Field, field_validator
@@ -58,7 +58,7 @@ class PluginConfig(BaseModel):
     """
 
     # VCS settings
-    vcs: Union[Vcs, str] = "any"
+    vcs: Vcs | str = "any"
     latest_tag: bool = False
     strict: bool = False
     tag_dir: str = "tags"
@@ -76,7 +76,7 @@ class PluginConfig(BaseModel):
     format: str | None = None
     format_jinja: str | None = None
     format_jinja_imports: list[FormatJinjaImport | dict[str, Any]] | None = None
-    style: Union[Style, str, None] = None
+    style: Style | str | None = None
 
     # Metadata
     metadata: bool | None = None
@@ -84,18 +84,18 @@ class PluginConfig(BaseModel):
     escape_with: str | None = None
 
     # Bumping
-    bump: Union[BumpConfig, bool] = False
+    bump: BumpConfig | bool = False
 
     # Fallback
     fallback_version: str | None = None
     dirty: bool | None = None
 
     # From file
-    from_file: Union[FromFileConfig, dict[str, Any], None] = None
+    from_file: FromFileConfig | dict[str, Any] | None = None
 
     @field_validator("vcs", mode="after")
     @classmethod
-    def normalize_vcs(cls, v: Union[Vcs, str]) -> Vcs:
+    def normalize_vcs(cls, v: Vcs | str) -> Vcs:
         if isinstance(v, Vcs):
             return v
         if isinstance(v, str):
@@ -107,7 +107,7 @@ class PluginConfig(BaseModel):
 
     @field_validator("style", mode="after")
     @classmethod
-    def normalize_style(cls, v: Union[Style, str, None]) -> Style | None:
+    def normalize_style(cls, v: Style | str | None) -> Style | None:
         if v is None:
             return None
         if isinstance(v, Style):
@@ -121,7 +121,7 @@ class PluginConfig(BaseModel):
 
     @field_validator("bump", mode="after")
     @classmethod
-    def normalize_bump(cls, v: Union[BumpConfig, bool, dict[str, Any]]) -> Union[BumpConfig, bool]:
+    def normalize_bump(cls, v: BumpConfig | bool | dict[str, Any]) -> BumpConfig | bool:
         if isinstance(v, BumpConfig):
             return v
         if isinstance(v, bool):
@@ -132,7 +132,7 @@ class PluginConfig(BaseModel):
 
     @field_validator("from_file", mode="after")
     @classmethod
-    def normalize_from_file(cls, v: Union[FromFileConfig, dict[str, Any], None]) -> Union[FromFileConfig, dict[str, Any], None]:
+    def normalize_from_file(cls, v: FromFileConfig | dict[str, Any] | None) -> FromFileConfig | dict[str, Any] | None:
         if v is None:
             return None
         if isinstance(v, FromFileConfig):
@@ -143,9 +143,7 @@ class PluginConfig(BaseModel):
 
     @field_validator("format_jinja_imports", mode="after")
     @classmethod
-    def normalize_imports(
-        cls, v: Any
-    ) -> list[dict[str, Any]] | None:
+    def normalize_imports(cls, v: Any) -> list[dict[str, Any]] | None:
         if v is None:
             return None
         if not isinstance(v, list):
@@ -228,10 +226,7 @@ def normalize_config(data: dict[str, Any]) -> dict[str, Any]:
         if isinstance(value, dict):
             result[normalized_key] = normalize_config(value)
         elif isinstance(value, list):
-            result[normalized_key] = [
-                normalize_config(item) if isinstance(item, dict) else item
-                for item in value
-            ]
+            result[normalized_key] = [normalize_config(item) if isinstance(item, dict) else item for item in value]
         else:
             result[normalized_key] = value
 

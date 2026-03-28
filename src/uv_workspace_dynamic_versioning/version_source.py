@@ -12,16 +12,13 @@ import re
 import subprocess
 import sys
 from functools import cached_property
-from importlib import import_module
 from pathlib import Path
 
-import jinja2.sandbox
 from dunamai import Style, Version
 from hatchling.version.source.plugin.interface import VersionSourceInterface
 
 from .schemas import PluginConfig, load_project_config
 from .template import render_jinja_template
-
 
 # Standard version patterns (adapted from dunamai)
 _VALID_PEP440 = r"^(?:\d+!)?\d+(?:\.\d+)*((?:a|b|rc)\d+)?(?:\.post\d+)?(?:\.dev\d+)?(?:\+[a-zA-Z0-9](?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9.]*[a-zA-Z0-9])?)?$"
@@ -122,9 +119,7 @@ def _read_version_from_file(config: PluginConfig, project_dir: Path) -> str | No
 
     match = re.search(from_file.pattern, content, re.MULTILINE)
     if match is None:
-        raise ValueError(
-            f"Pattern '{from_file.pattern}' did not match in '{from_file.source}'"
-        )
+        raise ValueError(f"Pattern '{from_file.pattern}' did not match in '{from_file.source}'")
     return str(match.group(1))
 
 
@@ -153,11 +148,11 @@ def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
             commit_length=config.commit_length,
         )
         if v.base == "0.0.0" and not config.fallback_version:
-             print(
-                 f"uv-workspace-dynamic-versioning: No tags found matching pattern '{config.pattern}'. "
-                 "Returning 0.0.0. Use [tool.uv-workspace-dynamic-versioning] pattern to configure.",
-                 file=sys.stderr,
-             )
+            print(
+                f"uv-workspace-dynamic-versioning: No tags found matching pattern '{config.pattern}'. "
+                "Returning 0.0.0. Use [tool.uv-workspace-dynamic-versioning] pattern to configure.",
+                file=sys.stderr,
+            )
         return v
     except RuntimeError as e:
         if config.fallback_version:
@@ -195,15 +190,13 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
             log_cmd = ["git", "log", "-1", "--format=%H", "HEAD", "--", "."]
 
         # Get commit distance for this directory
-        rev_out = subprocess.check_output(
-            rev_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        # nosec: subprocess call is safe because we use list-based arguments and no shell=True.
+        rev_out = subprocess.check_output(rev_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
         distance = len(rev_out.splitlines()) if rev_out else 0
 
         # Get latest commit for this directory
-        commit_out = subprocess.check_output(
-            log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        # nosec: subprocess call is safe
+        commit_out = subprocess.check_output(log_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
 
         if commit_out:
             commit_len = len(version.commit) if version.commit else 7
@@ -215,9 +208,8 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
 
         # Check if directory is dirty
         status_cmd = ["git", "status", "--porcelain", "--", "."]
-        status_out = subprocess.check_output(
-            status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
-        ).strip()
+        # nosec: subprocess call is safe
+        status_out = subprocess.check_output(status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL).strip()
         version.dirty = bool(status_out)
 
     except Exception as e:

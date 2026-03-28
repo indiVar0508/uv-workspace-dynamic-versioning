@@ -15,7 +15,6 @@ from dunamai import Version, bump_version, serialize_pep440, serialize_pvp, seri
 
 from .schemas import PluginConfig
 
-
 # Sandboxed Jinja2 environment for security
 _JINJA_ENV = jinja2.sandbox.SandboxedEnvironment()
 
@@ -141,17 +140,13 @@ def render_jinja_template(
         try:
             module = import_module(import_config.module)
         except ImportError as e:
-            raise ValueError(
-                f"Failed to import module '{import_config.module}': {e}"
-            ) from e
+            raise ValueError(f"Failed to import module '{import_config.module}': {e}") from e
 
         if import_config.item is not None:
             try:
                 context[import_config.item] = getattr(module, import_config.item)
             except AttributeError:
-                raise ValueError(
-                    f"Module '{import_config.module}' has no item '{import_config.item}'"
-                ) from None
+                raise ValueError(f"Module '{import_config.module}' has no item '{import_config.item}'") from None
         else:
             context[import_config.module] = module
 
