@@ -1,0 +1,13 @@
+[project]
+name = "pkg-a"
+dynamic = ["version"]
+description = "Package A in workspace"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"

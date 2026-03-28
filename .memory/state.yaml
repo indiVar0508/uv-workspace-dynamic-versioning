@@ -1,10 +1,10 @@
 active_branch: "refactor-v2"
 initialized: "2026-03-16T22:17:27Z"
 last_commit:
-  branch: main
-  hash: 0a221f67
-  timestamp: "2026-03-28T17:12:22.940Z"
-  summary: "Starting refactor of uv-workspace-dynamic-versioning: 1) Migrate to Pydantic for cleaner schema validation, 2) Create examples folder with minimal use cases, 3) Document backend support matrix, 4) Add comprehensive tests, 5) Update project structure for maintainability"
+  branch: "refactor-v2"
+  hash: 9723034d
+  timestamp: "2026-03-28T17:50:56.823Z"
+  summary: "Refactor versioning logic, add examples and documentation for best practices and CI."
 sessions:
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-16T22-17-11-584Z_cf26c542-00f8-4841-9174-7ef2aebb0c3f.jsonl"
     branch: main
@@ -36,3 +36,6 @@ sessions:
   - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-28T16-50-58-372Z_20e978f2-eb58-4711-8616-2b11a4978569.jsonl"
     branch: "refactor-v2"
     started: "2026-03-28T16:50:58.412Z"
+  - file: "/home/indivar/.pi/agent/sessions/--home-indivar-github-uv-workspace-dynamic-versioning--/2026-03-28T17-40-34-367Z_6b7a796c-39ba-4b5f-a5d2-b40ac4403272.jsonl"
+    branch: "refactor-v2"
+    started: "2026-03-28T17:40:34.416Z"

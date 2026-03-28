@@ -82,91 +82,57 @@ git checkout -b release/v1.2.0
 
 ## Version Management
 
-### Version Bumping
+### Release Tagging Patterns
 
-The plugin auto-bumps based on configuration:
+For most Python projects, it is standard to use "clean" version tags (e.g., `v1.2.3`). 
+The `dunamai` engine automatically handles the generation of development and post-release versions (like `1.2.3.post1.dev0+g<hash>`) for your artifacts based on the distance from the last tag.
+
+- **Clean tags:** Use `v1.2.3`. Avoid `.dev` or `.post` in the tags themselves unless it's a pre-release like `v1.2.3-rc1`.
+- **Pre-releases:** Use `v1.2.3-rc1`. `dunamai` will recognize this as a stage.
+- **Build artifacts:** Let the plugin handle the `.post` and `.dev` suffixes for non-tagged commits.
+
+### Hybrid Workspace Setup (Root + Members)
+
+A common pattern for monorepos is to have:
+1.  **Root package:** Tracks the overall project's version and is tagged with `vX.Y.Z`.
+2.  **Workspace members:** Depend on the root package but may have their own versioning.
+
+If you use `uv-dynamic-versioning` at the root and `uv-workspace-dynamic-versioning` for members:
+- The root version will reflect the distance from the last tag based on *any* commit in the repository.
+- Each member's version will reflect the distance from the last tag based *only* on commits within that member's directory.
+
+This allows you to release a new version of the root package while keeping individual member versions stable if they haven't changed.
+
+### Bumping Strategies
+
+If you want the version to ALWAYS be "ahead" of the last tag, use `bump = true`:
 
 ```toml
 [tool.uv-workspace-dynamic-versioning]
-bump = true  # Smart bumping
+bump = true
 ```
 
-Or use Jinja templates for custom bumping:
+If the last tag was `v1.0.0` and there are 2 commits in the directory, the version will be `1.0.1.post2.dev0+...` instead of `1.0.0.post2.dev0+...`.
 
-```toml
-[tool.uv-workspace-dynamic-versioning]
-format-jinja = "{{ major }}.{{ minor }}.{{ patch }}"
-```
+## CI/CD Validation
 
-### Release Process
+### Automated Version Checks
 
-1. **Development:**
-   ```bash
-   # Work on features...
-   git commit -m "feat: add new feature"
-   ```
+When releasing your `.whl` files, it is recommended to validate that the version was generated correctly. You can automate this by:
+1.  Checking the built artifact's filename or metadata.
+2.  Running a "bootstrap" script that builds a test repo using your plugin.
 
-2. **Tag Release:**
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
+See [scripts/validate_build.py](../scripts/validate_build.py) for a reference implementation.
 
-3. **Build:**
-   ```bash
-   hatch build
-   # or
-   uv build
-   ```
+### GitHub Actions Workflow
 
-### Hotfix Process
-
-```bash
-# From tag
-git checkout v1.0.0
-git checkout -b hotfix/v1.0.1
-
-# Fix and commit
-git commit -m "fix: critical bug"
-
-# Tag and build
-git tag v1.0.1
-hatch build
-```
-
-## CI/CD Integration
-
-### GitHub Actions
+Ensure you fetch the full git history for correct versioning:
 
 ```yaml
-name: Build and Test
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history for versioning
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install
-        run: pip install hatch hatch-vcs uv-workspace-dynamic-versioning
-
-      - name: Build
-        run: hatch build
-
-      - name: Test
-        run: hatch run pytest
+steps:
+  - uses: actions/checkout@v4
+    with:
+      fetch-depth: 0  # CRITICAL for dynamic versioning
 ```
 
 ### Pre-commit Hooks

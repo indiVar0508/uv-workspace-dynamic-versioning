@@ -1,0 +1,31 @@
+[project]
+name = "example-deps"
+dynamic = ["version", "dependencies"]
+description = "Dynamic dependency resolution example"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+
+[tool.hatch.metadata.hooks.uv-workspace-dynamic-versioning]
+
+[tool.uv-workspace-dynamic-versioning]
+# Bump version for dev releases
+bump = true
+
+[tool.uv-workspace-dynamic-versioning.dependencies]
+# Dependencies with version templating
+dependencies = [
+    "requests>={{ major }}.{{ minor }}.0",
+    "click>=8.0"
+]
+optional-dependencies.dev = [
+    "pytest=={{ major }}.{{ minor }}.0",
+    "pytest-cov>=4.0"
+]

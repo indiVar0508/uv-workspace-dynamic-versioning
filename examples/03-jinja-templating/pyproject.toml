@@ -1,0 +1,23 @@
+[project]
+name = "example-jinja"
+dynamic = ["version"]
+description = "Jinja2 template example for version formatting"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+
+[tool.uv-workspace-dynamic-versioning]
+# Custom version format using Jinja2
+format-jinja = "{{ major }}.{{ minor }}.{{ patch }}+{{ branch | default('main') }}"
+escape-with = "."
+
+# Only bump patch level automatically
+bump.enable = true
+bump.index = 2

@@ -139,7 +139,7 @@ def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
         The Version object from dunamai
     """
     try:
-        return Version.from_vcs(
+        v = Version.from_vcs(
             config.vcs,
             path=project_dir,
             latest_tag=config.latest_tag,
@@ -152,9 +152,20 @@ def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
             pattern_prefix=config.pattern_prefix,
             commit_length=config.commit_length,
         )
+        if v.base == "0.0.0" and not config.fallback_version:
+             print(
+                 f"uv-workspace-dynamic-versioning: No tags found matching pattern '{config.pattern}'. "
+                 "Returning 0.0.0. Use [tool.uv-workspace-dynamic-versioning] pattern to configure.",
+                 file=sys.stderr,
+             )
+        return v
     except RuntimeError as e:
         if config.fallback_version:
             return Version(config.fallback_version)
+        print(
+            f"uv-workspace-dynamic-versioning: VCS version detection failed: {e}",
+            file=sys.stderr,
+        )
         raise e
 
 
@@ -175,12 +186,13 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
     matched_tag = getattr(version, "_matched_tag", None)
 
     try:
+        # Use "." as the path filter because we run the command from the package directory
         if matched_tag:
-            rev_cmd = ["git", "rev-list", f"{matched_tag}..HEAD", "--", str(path)]
-            log_cmd = ["git", "log", "-1", "--format=%H", f"{matched_tag}..HEAD", "--", str(path)]
+            rev_cmd = ["git", "rev-list", f"{matched_tag}..HEAD", "--", "."]
+            log_cmd = ["git", "log", "-1", "--format=%H", f"{matched_tag}..HEAD", "--", "."]
         else:
-            rev_cmd = ["git", "rev-list", "HEAD", "--", str(path)]
-            log_cmd = ["git", "log", "-1", "--format=%H", "HEAD", "--", str(path)]
+            rev_cmd = ["git", "rev-list", "HEAD", "--", "."]
+            log_cmd = ["git", "log", "-1", "--format=%H", "HEAD", "--", "."]
 
         # Get commit distance for this directory
         rev_out = subprocess.check_output(
@@ -194,12 +206,15 @@ def _patch_version_for_directory(version: Version, path: Path) -> Version:
         ).strip()
 
         if commit_out:
-            commit_len = version.commit[:7] if version.commit else 7
+            commit_len = len(version.commit) if version.commit else 7
             version.commit = commit_out[:commit_len]
             version.distance = distance
+        else:
+            # If no commits in this directory since the tag, distance is 0
+            version.distance = 0
 
         # Check if directory is dirty
-        status_cmd = ["git", "status", "--porcelain", "--", str(path)]
+        status_cmd = ["git", "status", "--porcelain", "--", "."]
         status_out = subprocess.check_output(
             status_cmd, cwd=path, text=True, stderr=subprocess.DEVNULL
         ).strip()

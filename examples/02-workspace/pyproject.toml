@@ -1,0 +1,9 @@
+[project]
+name = "example-workspace"
+version = "0.1.0"
+description = "Workspace example with multiple packages"
+requires-python = ">=3.9"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["packages/*"]

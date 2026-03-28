@@ -1,0 +1,18 @@
+[project]
+name = "example-custom"
+dynamic = ["version"]
+description = "Custom version format examples"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+
+# PEP 440 style (default)
+[tool.uv-workspace-dynamic-versioning]
+style = "pep440"

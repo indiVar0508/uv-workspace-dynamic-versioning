@@ -3,7 +3,17 @@ dist/
 build/
 *.egg-info/
 
-# Examples (standalone git repos)
-examples/*/
+# Examples
+# examples/*/
 !examples/README.md
 !examples/*/README.md
+!examples/01-basic-hatchling/pyproject.toml
+!examples/02-workspace/pyproject.toml
+!examples/03-jinja-templating/pyproject.toml
+!examples/04-dynamic-dependencies/pyproject.toml
+!examples/05-custom-format/pyproject.toml
+!examples/06-hybrid-workspace/pyproject.toml
+!examples/*/src/
+!examples/*/packages/
+
+__py_cache__
