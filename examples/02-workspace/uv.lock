@@ -1,0 +1,24 @@
+version = 1
+requires-python = ">=3.9"
+
+[manifest]
+members = [
+    "example-workspace",
+    "pkg-a",
+    "pkg-b",
+]
+
+[[package]]
+name = "example-workspace"
+version = "0.1.0"
+source = { virtual = "." }
+
+[[package]]
+name = "pkg-a"
+version = "0.1.2"
+source = { editable = "packages/pkg-a" }
+
+[[package]]
+name = "pkg-b"
+version = "0.1.2"
+source = { editable = "packages/pkg-b" }
