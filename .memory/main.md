@@ -10,6 +10,7 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - **Improved Accuracy**: Fixed directory-specific patching logic to use localized path filters, preventing version "bleeding" between workspace packages.
 - **Enhanced Quality**: Reached **92%** test coverage with comprehensive tests for edge cases and error handling.
 - **Security Gated CI**: Unified CI/CD pipeline ensures that PyPI releases only happen after passing linting, Bandit security scans, and programmatic build validation.
+- **Supply Chain Security**: Integrated `actions/attest-build-provenance` with immutable commit SHA pinning to generate verifiable SLSA build provenance for all release artifacts.
 - **Documentation**: Updated with industry best practices for monorepos, release tagging, and hybrid workspace architectures.
 
 ## Maintainer Role & Accountability
@@ -40,6 +41,7 @@ As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsibl
 - [x] Automated Release Gating (CI/CD).
 - [x] Initial release (v0.1.0).
 - [x] Stable Pydantic v2 Refactor (v0.1.3).
+- [x] Integrated SLSA Build Provenance (v4.1.0).
 
 ## Open Questions
 - How to handle the transition to MkDocs 2.0 when it becomes stable?

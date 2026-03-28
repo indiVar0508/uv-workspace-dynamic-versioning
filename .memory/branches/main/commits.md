@@ -346,3 +346,24 @@ The project provides a `hatch` extension for `uv` workspaces that automates vers
 ### Merge from refactor-v2
 
 Successfully refactored the codebase to use Pydantic v2 for robust schema validation, established 92% test coverage, and implemented a 'Security First' supply chain policy. This includes pinning all build-system and project dependencies to exact versions and pinning GitHub Actions to immutable commit SHAs. The CI/CD pipeline was unified and hardened, and comprehensive examples for hybrid workspaces were added. All session-specific memory logs have been removed from Git tracking.
+
+---
+
+## Commit f526d5c5 | 2026-03-28T19:13:28.888Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary development and memory track for `uv-workspace-dynamic-versioning`, a `hatch` plugin that automates versioning and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces that automates versioning and dependency injection using `hatchling` and `dunamai`. It features directory-specific Git history filtering for accurate monorepo versioning and uses sandboxed Jinja2 templates for dynamic dependency updates. A robust foundation includes a `pytest` suite reaching 92% coverage, Material-themed documentation, and critical security hardening against SSTI and Path Traversal risks. After reaching a stable v0.1.1 release, the codebase was refactored to use Pydantic v2 for configuration validation, and a 'Security First' supply chain policy was implemented, pinning all dependencies and GitHub Actions to immutable SHAs.
+
+### This Commit's Contribution
+
+- Integrated `actions/attest-build-provenance` into the `publish` job to generate verifiable in-toto attestations for build artifacts.
+- Hardened the CI/CD pipeline by pinning the provenance action to an immutable commit SHA (`a2bbfa25375fe432b6a289bc6b6cd0c4c32`) to prevent supply chain attacks via tag mutation.
+- Configured explicit OIDC permissions (`id-token: write`, `attestations: write`) required for verifiable build provenance.
+- Verified the presence and accuracy of the SLSA Level 3 badge in `README.md`, confirming it aligns with the project's security posture.
+- Decided against adding a separate "Artifact Attestation" badge as there is currently no official stable shields.io or GitHub-native badge for this specific feature.
+- Confirmed that the `publish` job remains compatible with the hardened environment after the security updates.
