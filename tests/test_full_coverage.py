@@ -11,8 +11,8 @@ from uv_workspace_dynamic_versioning import hooks, plugin
 from uv_workspace_dynamic_versioning.metadata_hook import DependenciesMetadataHook
 from uv_workspace_dynamic_versioning.schemas import (
     BumpConfig,
-    FromFileConfig,
     FormatJinjaImport,
+    FromFileConfig,
     MetadataHookConfig,
     PluginConfig,
     load_metadata_hook_config,
@@ -93,11 +93,11 @@ def test_from_file_version(tmp_path):
 def test_from_file_config_validation():
     """Test FromFileConfig validation."""
     from pydantic import ValidationError
-    
+
     # Valid
     c = FromFileConfig(source="V")
     assert c.source == "V"
-    
+
     # Invalid type
     with pytest.raises(ValidationError):
         FromFileConfig(source=123)
@@ -113,9 +113,7 @@ def test_jinja_template_parts():
     assert result == "1.2.3 (feattest)"
 
     # Test with custom module import
-    config = PluginConfig(
-        format_jinja_imports=[{"module": "os", "item": "name"}]
-    )
+    config = PluginConfig(format_jinja_imports=[{"module": "os", "item": "name"}])
     result = render_jinja_template("{{ name }}", version=version, config=config)
     assert result in ["posix", "nt"]
 
@@ -145,6 +143,7 @@ def test_vcs_fallback(tmp_path):
 def test_schemas_normalization_more():
     """Test more schema normalization cases."""
     from pydantic import ValidationError
+
     # Already a Vcs object
     config = PluginConfig(vcs=Vcs.Git)
     assert config.vcs == Vcs.Git
@@ -187,6 +186,7 @@ def test_schemas_normalization_more():
 
     # normalize_config with list
     from uv_workspace_dynamic_versioning.schemas import normalize_config
+
     data = {"my-list": [{"a-b": 1}]}
     norm = normalize_config(data)
     assert norm["my_list"][0]["a_b"] == 1
@@ -194,7 +194,6 @@ def test_schemas_normalization_more():
 
 def test_schemas_errors_extra(tmp_path):
     """Test more schema error cases."""
-    from pydantic import ValidationError
 
     # load_metadata_hook_config with invalid file
     pyproject = tmp_path / "pyproject.toml"
@@ -205,15 +204,15 @@ def test_schemas_errors_extra(tmp_path):
 def test_metadata_hook_config_validator():
     """Test MetadataHookConfig validator directly."""
     from pydantic import ValidationError
-    
+
     # Valid
     c = MetadataHookConfig(dependencies=["a"])
     assert c.dependencies == ["a"]
-    
+
     # None
     c = MetadataHookConfig(dependencies=None)
     assert c.dependencies is None
-    
+
     # Invalid type
     with pytest.raises(ValidationError):
         MetadataHookConfig(dependencies=123)
@@ -222,6 +221,7 @@ def test_metadata_hook_config_validator():
 def test_normalize_config_list():
     """Test normalize_config with list of dicts."""
     from uv_workspace_dynamic_versioning.schemas import normalize_config
+
     data = {"a-b": [{"c-d": 1}]}
     res = normalize_config(data)
     assert res["a_b"][0]["c_d"] == 1
@@ -229,8 +229,7 @@ def test_normalize_config_list():
 
 def test_jinja_imports_validation():
     """Test Jinja imports validation in PluginConfig."""
-    from pydantic import ValidationError
-    
+
     # Valid dict import
     c = PluginConfig(format_jinja_imports=[{"module": "os", "item": "path"}])
     imps = c.get_jinja_imports()
@@ -246,8 +245,9 @@ def test_jinja_imports_validation():
 def test_template_error_handling():
     """Test Jinja template error cases."""
     from uv_workspace_dynamic_versioning.template import render_jinja_template
+
     v = Version("1.0.0")
-    
+
     # Missing module
     c = PluginConfig(format_jinja_imports=[{"module": "nonexistent_module_xyz"}])
     with pytest.raises(ValueError, match="Failed to import module"):
@@ -277,9 +277,10 @@ def test_version_source_more(tmp_path, monkeypatch):
     # No tags found warning
     # We mock Version.from_vcs to return 0.0.0
     from dunamai import Version as DunamaiVersion
+
     def mock_from_vcs(*args, **kwargs):
         return DunamaiVersion("0.0.0")
-    
+
     monkeypatch.setattr(DunamaiVersion, "from_vcs", mock_from_vcs)
     config = PluginConfig()
     # Should print to stderr but we just check it runs
@@ -290,6 +291,7 @@ def test_version_source_more(tmp_path, monkeypatch):
 def test_patch_error(tmp_path):
     """Test error handling in directory patching."""
     from uv_workspace_dynamic_versioning.version_source import _patch_version_for_directory
+
     v = Version("1.0.0")
     # Using a path that is not a git repo to trigger exception
     # (though subprocess might just fail)
