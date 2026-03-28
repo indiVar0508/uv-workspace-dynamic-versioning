@@ -18,8 +18,8 @@ class TestPluginConfig:
     def test_default_config(self):
         """Test that default configuration is valid."""
         config = PluginConfig()
-        # Default vcs is a string "any" after normalization
-        assert config.vcs == "any"
+        # Default vcs is normalized to Vcs.Any
+        assert config.vcs.value == "any"
         assert config.latest_tag is False
         assert config.strict is False
         assert config.bump is False
@@ -125,8 +125,8 @@ name = "test"
         )
 
         config = load_project_config(tmp_path)
-        # Default vcs is string "any"
-        assert config.vcs == "any"
+        # Default vcs is normalized to Vcs.Any
+        assert config.vcs.value == "any"
 
     def test_file_not_found(self):
         """Test that FileNotFoundError is raised when no pyproject.toml."""
