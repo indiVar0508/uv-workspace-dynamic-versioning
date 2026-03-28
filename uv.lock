@@ -1354,7 +1354,7 @@ wheels = [
 
 [[package]]
 name = "uv-workspace-dynamic-versioning"
-version = "0.1.2.dev2+gecab8f910.d20260328"
+version = "0.1.4.dev3+gceb605615"
 source = { editable = "." }
 dependencies = [
     { name = "dunamai" },
@@ -1381,20 +1381,20 @@ docs = [
 
 [package.metadata]
 requires-dist = [
-    { name = "dunamai", specifier = ">=1.0.0" },
-    { name = "hatchling", specifier = ">=1.0.0" },
-    { name = "jinja2", specifier = ">=3.1.5" },
+    { name = "dunamai", specifier = "==1.26.0" },
+    { name = "hatchling", specifier = "==1.27.0" },
+    { name = "jinja2", specifier = "==3.1.6" },
     { name = "mkdocs-git-revision-date-localized-plugin", marker = "extra == 'docs'", specifier = ">=1.2.0" },
     { name = "mkdocs-glightbox", marker = "extra == 'docs'", specifier = ">=0.3.0" },
     { name = "mkdocs-material", extras = ["recommended"], marker = "extra == 'docs'", specifier = ">=9.5.0" },
     { name = "mkdocs-minify-plugin", marker = "extra == 'docs'", specifier = ">=0.6.0" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.20.0" },
-    { name = "pydantic", specifier = ">=2.0" },
+    { name = "pydantic", specifier = "==2.12.5" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
     { name = "pytest-mock", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'dev'" },
-    { name = "tomlkit", specifier = ">=0.11.0" },
+    { name = "tomlkit", specifier = "==0.13.3" },
 ]
 
 [[package]]
