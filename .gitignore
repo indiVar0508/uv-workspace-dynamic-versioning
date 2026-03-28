@@ -23,3 +23,7 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Memory (OTA traces and local state)
+.memory/branches/*/log.md
+.memory/state.yaml

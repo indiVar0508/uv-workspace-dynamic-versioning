@@ -18,13 +18,14 @@ As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsibl
 2.  **Package Integrity**: Managing `pyproject.toml` metadata, dependencies, and entry points.
 3.  **Security Advocacy**: Enforcing sandboxing for Jinja2, preventing path traversal, and auditing all `subprocess` interactions.
 4.  **Release Management**: Curating `CHANGELOG.md`, managing git tags, and supervising the automated release pipeline to PyPI.
-6.  **Supply Chain Security**: Hardening dependencies by pinning to compatible version ranges and using commit SHAs for all GitHub Actions.
+6.  **Security First**: Hardening supply chain security by pinning all project and build-system dependencies to exact versions and using immutable commit SHAs for all GitHub Actions to ensure deterministic and verifiable builds.
 
 ## Key Decisions Made
 - **Build Backend:** Using `hatchling`.
 - **Versioning Engine:** Using `dunamai`.
 - **Configuration**: Standardized on Pydantic v2 with `validate_default=True` for robust runtime validation.
 - **Security**: Enforced Bandit scanning and list-based `subprocess` arguments to eliminate shell injection risks.
+- **Security First**: Adopted a project-wide policy of pinning all infrastructure, build-system, and project dependencies to exact versions and immutable commit SHAs, minimizing exposure to upstream dependency drift and compromised releases.
 - **CI Architecture**: Adopted a gated single-pipeline strategy where `publish` depends on all validation stages.
 - **Hybrid Support**: Formalized support for hybrid workspaces where root projects and members use different dynamic versioning plugins.
 
