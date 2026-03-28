@@ -1,6 +1,24 @@
 # uv-workspace-dynamic-versioning
 
 <p align="center">
+  <a href="https://pypi.org/project/uv-workspace-dynamic-versioning/">
+    <img src="https://img.shields.io/pypi/v/uv-workspace-dynamic-versioning.svg" alt="PyPI version">
+  </a>
+  <a href="https://github.com/indiVar0508/uv-workspace-dynamic-versioning/actions/workflows/ci.yml">
+    <img src="https://github.com/indiVar0508/uv-workspace-dynamic-versioning/actions/workflows/ci.yml/badge.svg" alt="CI Status">
+  </a>
+  <a href="https://github.com/indiVar0508/uv-workspace-dynamic-versioning">
+    <img src="https://img.shields.io/badge/coverage-92%25-brightgreen" alt="Coverage">
+  </a>
+  <a href="https://slsa.dev">
+    <img src="https://img.shields.io/badge/SLSA-Level%203-blue" alt="SLSA Level 3">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/pypi/l/uv-workspace-dynamic-versioning.svg" alt="License">
+  </a>
+</p>
+
+<p align="center">
   <em>A powerful Hatch plugin for dynamic versioning and dependency injection in uv workspaces.</em>
 </p>
 
