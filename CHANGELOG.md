@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hybrid workspace example in `examples/06-hybrid-workspace` demonstrating `uv-dynamic-versioning` + `uv-workspace-dynamic-versioning`.
 
 ### Fixed
+- Fixed CI/CD workflow trigger to properly publish on git tags.
+- Hardened supply chain security by pinning GitHub Action SHAs to immutable commit SHAs.
 - Fixed critical `KeyError: 'any'` caused by un-normalized default values in Pydantic schemas.
 - Fixed `TOMLDecodeError` in build scripts by properly escaping regex backslashes in generated TOML.
 - Fixed directory-specific Git history patching to use correct relative path filters.
