@@ -13,12 +13,12 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         fetch-depth: 0
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@39750171630c8856c45b5791c646487f45ccc580 # v5.1.1
       with:
         python-version: '3.10'
 
@@ -37,10 +37,10 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@39750171630c8856c45b5791c646487f45ccc580 # v5.1.1
       with:
         python-version: '3.10'
 
@@ -58,12 +58,12 @@ jobs:
   validate-build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         fetch-depth: 0
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@39750171630c8856c45b5791c646487f45ccc580 # v5.1.1
       with:
         python-version: '3.10'
 
@@ -99,4 +99,4 @@ jobs:
       run: uv build
 
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1
+      uses: pypa/gh-action-pypi-publish@7ad1428383c271630bc38541908f9c1e7a57a070 # release/v1.12.4

@@ -18,7 +18,7 @@ As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsibl
 2.  **Package Integrity**: Managing `pyproject.toml` metadata, dependencies, and entry points.
 3.  **Security Advocacy**: Enforcing sandboxing for Jinja2, preventing path traversal, and auditing all `subprocess` interactions.
 4.  **Release Management**: Curating `CHANGELOG.md`, managing git tags, and supervising the automated release pipeline to PyPI.
-5.  **Quality Assurance**: Maintaining 90%+ test coverage and ensuring that every build is validated against real-world workspace scenarios.
+6.  **Supply Chain Security**: Hardening dependencies by pinning to compatible version ranges and using commit SHAs for all GitHub Actions.
 
 ## Key Decisions Made
 - **Build Backend:** Using `hatchling`.
