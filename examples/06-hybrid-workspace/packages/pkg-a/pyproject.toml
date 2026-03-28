@@ -1,0 +1,24 @@
+[project]
+name = "pkg-a"
+dynamic = ["version"]
+description = "Workspace package with uv-workspace-dynamic-versioning"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+
+[tool.uv-workspace-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+metadata = true
+dirty = true
+pattern = "default"
+bump = true
+# Specify the path filter to this package directory for correct distance calculation
+# If not specified, it defaults to the directory containing pyproject.toml

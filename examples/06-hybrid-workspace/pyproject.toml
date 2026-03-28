@@ -1,0 +1,25 @@
+[project]
+name = "example-hybrid-root"
+dynamic = ["version"]
+description = "Hybrid example with uv-dynamic-versioning and uv-workspace-dynamic-versioning"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+metadata = true
+dirty = true
+pattern = "default"
+bump = true

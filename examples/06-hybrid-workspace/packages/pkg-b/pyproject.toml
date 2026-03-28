@@ -1,0 +1,22 @@
+[project]
+name = "pkg-b"
+dynamic = ["version"]
+description = "Another workspace package with uv-workspace-dynamic-versioning"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[build-system]
+requires = ["hatchling", "uv-workspace-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-workspace-dynamic-versioning"
+
+[tool.uv-workspace-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+metadata = true
+dirty = false  # Set to false for cleaner testing if we have untracked files
+pattern = "default"
+bump = true
