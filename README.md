@@ -10,7 +10,7 @@
   <a href="https://github.com/indiVar0508/uv-workspace-dynamic-versioning">
     <img src="https://img.shields.io/badge/coverage-92%25-brightgreen" alt="Coverage">
   </a>
-  <a href="https://slsa.dev">
+  <a href="https://github.com/indiVar0508/uv-workspace-dynamic-versioning/attestations">
     <img src="https://img.shields.io/badge/SLSA-Level%203-blue" alt="SLSA Level 3">
   </a>
   <a href="https://opensource.org/licenses/MIT">
