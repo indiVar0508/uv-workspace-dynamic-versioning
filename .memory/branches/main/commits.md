@@ -367,3 +367,24 @@ The project is a `hatch` extension for `uv` workspaces that automates versioning
 - Verified the presence and accuracy of the SLSA Level 3 badge in `README.md`, confirming it aligns with the project's security posture.
 - Decided against adding a separate "Artifact Attestation" badge as there is currently no official stable shields.io or GitHub-native badge for this specific feature.
 - Confirmed that the `publish` job remains compatible with the hardened environment after the security updates.
+
+---
+
+## Commit 2d09ef38 | 2026-03-28T19:22:01.697Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary development and memory track for `uv-workspace-dynamic-versioning`, a `hatch` plugin that automates versioning and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces that automates versioning and dependency injection using `hatchling` and `dunamai`, featuring directory-specific Git history filtering for accurate monorepo versioning. A robust foundation includes a `pytest` suite with 92% coverage, Material-themed documentation, and critical security hardening against SSTI and Path Traversal risks. Following the v0.1.1 release, the codebase was refactored with Pydantic v2 and a 'Security First' supply chain policy was implemented, pinning all dependencies and GitHub Actions to immutable SHAs. Most recently, the CI/CD pipeline was integrated with `actions/attest-build-provenance` to generate verifiable in-toto attestations, formally aligning the project with SLSA Level 3 security standards and preparing for automated, cryptographically signed releases.
+
+### This Commit's Contribution
+
+- Formally prepared and tagged the `v0.1.4` release to establish the project's first release with full SLSA build provenance.
+- Updated `CHANGELOG.md` and synchronized `uv.lock` files across the root and example workspaces to ensure build reproducibility.
+- Linked the SLSA Level 3 badge in `README.md` directly to the GitHub attestations verification page for end-user transparency.
+- Removed stale build artifacts from the `dist/` directory to prevent accidental inclusion of legacy versions in the release.
+- Confirmed that `README.md` correctly lacks hardcoded version strings, relying on dynamic badges and metadata to avoid manual synchronization errors.
+- Decided to skip retroactively generating attestations for `v0.1.3` in favor of a fresh, secured `v0.1.4` release that leverages the newly hardened CI pipeline.

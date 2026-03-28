@@ -10,15 +10,16 @@ To simplify and automate version management in `uv` workspaces by providing a dy
 - **Improved Accuracy**: Fixed directory-specific patching logic to use localized path filters, preventing version "bleeding" between workspace packages.
 - **Enhanced Quality**: Reached **92%** test coverage with comprehensive tests for edge cases and error handling.
 - **Security Gated CI**: Unified CI/CD pipeline ensures that PyPI releases only happen after passing linting, Bandit security scans, and programmatic build validation.
-- **Supply Chain Security**: Integrated `actions/attest-build-provenance` with immutable commit SHA pinning to generate verifiable SLSA build provenance for all release artifacts.
-- **Documentation**: Updated with industry best practices for monorepos, release tagging, and hybrid workspace architectures.
+- **Supply Chain Security**: Integrated `actions/attest-build-provenance` with immutable commit SHA pinning to generate verifiable SLSA build provenance for all release artifacts, starting with `v0.1.4`.
+- **Documentation**: Updated with industry best practices for monorepos, release tagging, and hybrid workspace architectures. Linked SLSA badge to GitHub attestations verification page.
 
 ## Maintainer Role & Accountability
 As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsible for:
 1.  **Code Stewardship**: Ensuring the Python implementation follows PEP 8, is type-safe, and utilizes the latest language features (Python 3.10+).
 2.  **Package Integrity**: Managing `pyproject.toml` metadata, dependencies, and entry points.
 3.  **Security Advocacy**: Enforcing sandboxing for Jinja2, preventing path traversal, and auditing all `subprocess` interactions.
-4.  **Release Management**: Curating `CHANGELOG.md`, managing git tags, and supervising the automated release pipeline to PyPI.
+4.  **Release Preparation**: Curating `CHANGELOG.md` and preparing metadata for releases. **I am STRICTLY FORBIDDEN from creating Git tags or pushing tags to remote branches without explicit, one-time permission from the user for every single release.**
+5.  **Branch Management**: I may push to feature branches or `main` (if instructed), but NEVER to tags.
 6.  **Security First**: Hardening supply chain security by pinning all project and build-system dependencies to exact versions and using immutable commit SHAs for all GitHub Actions to ensure deterministic and verifiable builds.
 
 ## Key Decisions Made
@@ -41,7 +42,7 @@ As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsibl
 - [x] Automated Release Gating (CI/CD).
 - [x] Initial release (v0.1.0).
 - [x] Stable Pydantic v2 Refactor (v0.1.3).
-- [x] Integrated SLSA Build Provenance (v4.1.0).
+- [ ] v0.1.4 Release (Prepared, awaiting user tag).
 
 ## Open Questions
 - How to handle the transition to MkDocs 2.0 when it becomes stable?
