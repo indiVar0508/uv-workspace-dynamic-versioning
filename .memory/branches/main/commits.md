@@ -338,3 +338,11 @@ The project provides a `hatch` extension for `uv` workspaces that automates vers
 - Decided to consolidate and restructure the `vendored/` directory to improve internal code organization and maintainability.
 - Established a plan for a dedicated `examples/` folder to demonstrate minimal use cases for workspace setup and backend configuration.
 - Identified the necessity of a "Backend Support Matrix" in the documentation to explicitly clarify why `setuptools`, `flit`, and `pdm` are not natively supported.
+
+---
+
+## Commit b3f910a6 | 2026-03-28T19:07:50.467Z
+
+### Merge from refactor-v2
+
+Successfully refactored the codebase to use Pydantic v2 for robust schema validation, established 92% test coverage, and implemented a 'Security First' supply chain policy. This includes pinning all build-system and project dependencies to exact versions and pinning GitHub Actions to immutable commit SHAs. The CI/CD pipeline was unified and hardened, and comprehensive examples for hybrid workspaces were added. All session-specific memory logs have been removed from Git tracking.
