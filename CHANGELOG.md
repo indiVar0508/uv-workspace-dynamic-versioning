@@ -5,15 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.4] - Unreleased
+## [0.1.4] - 2026-04-05
 
 ### Added
-- Integrated SLSA Level 3 build provenance into CI/CD pipeline.
-- Verified build attestations on GitHub for enhanced supply chain security.
-- Comprehensive build validation scripts and automated security gated releases.
+- Native support for building in Docker/missing-VCS environments via workspace version inheritance.
+- Poetry-style version overrides via `UV_WORKSPACE_DYNAMIC_VERSIONING_OVERRIDE` (package-specific) and `UV_WORKSPACE_DYNAMIC_VERSIONING_BYPASS` (global).
+- Integrated SLSA Level 3 build provenance with secure build attestations.
+- CI Hardening: Pinning all tools (`uv`, `bandit`) and actions to immutable commit SHAs on Node 24.
 
 ### Fixed
-- Synchronized repository documentation and lockfiles to reflect the latest version.
+- Resolved CI security scan failures by properly syncing dev dependencies for `bandit`.
+- Suppressed `try-except-pass` warnings where broad exception handling is intentional for configuration fallbacks.
 - Corrected version discrepancy in example workspace dependencies.
 
 ## [0.1.3] - 2026-03-28
