@@ -14,6 +14,7 @@ import sys
 from functools import cached_property
 from pathlib import Path
 
+import tomlkit
 from dunamai import Style, Version
 from hatchling.version.source.plugin.interface import VersionSourceInterface
 
@@ -46,9 +47,71 @@ def check_version_style(version: str, style: Style = Style.Pep440) -> None:
         raise ValueError(f"Version '{version}' does not conform to {style.name} style")
 
 
-def _get_bypass_version() -> str | None:
-    """Check for version bypass environment variable."""
+def _get_bypass_version(project_dir: Path) -> str | None:
+    """Check for version bypass environment variables.
+    
+    Supports both global bypass and package-specific overrides via:
+    - UV_WORKSPACE_DYNAMIC_VERSIONING_OVERRIDE (e.g. "pkg1=1.0.0, pkg2=2.0.0")
+    - UV_WORKSPACE_DYNAMIC_VERSIONING_BYPASS (global fallback)
+    - UV_DYNAMIC_VERSIONING_BYPASS (legacy global fallback)
+    """
+    # 1. Check for package-specific overrides
+    override_str = os.environ.get("UV_WORKSPACE_DYNAMIC_VERSIONING_OVERRIDE") or os.environ.get("UV_DYNAMIC_VERSIONING_OVERRIDE")
+    if override_str:
+        try:
+            pyproject_path = project_dir / "pyproject.toml"
+            if pyproject_path.is_file():
+                content = pyproject_path.read_text(encoding="utf-8")
+                import tomlkit
+                data = tomlkit.parse(content)
+                project_name = data.get("project", {}).get("name")
+                
+                if project_name:
+                    for part in override_str.split(","):
+                        if "=" in part:
+                            k, v = part.split("=", 1)
+                            if k.strip() == project_name:
+                                return v.strip()
+        except Exception:
+            pass
+
+    # 2. Check for global bypass
+    bypass = os.environ.get("UV_WORKSPACE_DYNAMIC_VERSIONING_BYPASS")
+    if bypass:
+        return bypass
+
+    # 3. Legacy bypass
     return os.environ.get("UV_DYNAMIC_VERSIONING_BYPASS")
+
+
+def _get_workspace_version(project_dir: Path) -> str | None:
+    """Find a static project version in any parent pyproject.toml.
+
+    Args:
+        project_dir: The project directory
+
+    Returns:
+        The version string if found, None otherwise
+    """
+    current = project_dir.resolve()
+    for dir_path in [current, *current.parents]:
+        pyproject_path = dir_path / "pyproject.toml"
+        if not pyproject_path.is_file():
+            continue
+
+        try:
+            content = pyproject_path.read_text(encoding="utf-8")
+            data = tomlkit.parse(content)
+            
+            project = data.get("project", {})
+            if isinstance(project, dict):
+                version = project.get("version")
+                if version and isinstance(version, str):
+                    return version
+        except Exception:
+            pass
+
+    return None
 
 
 class DynamicWorkspaceVersionSource(VersionSourceInterface):
@@ -123,12 +186,13 @@ def _read_version_from_file(config: PluginConfig, project_dir: Path) -> str | No
     return str(match.group(1))
 
 
-def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
+def _get_vcs_version(config: PluginConfig, project_dir: Path, ws_version: str | None = None) -> Version:
     """Get version from VCS (git) using dunamai.
 
     Args:
         config: The plugin configuration
         project_dir: The project directory
+        ws_version: Optional workspace fallback version
 
     Returns:
         The Version object from dunamai
@@ -147,7 +211,7 @@ def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
             pattern_prefix=config.pattern_prefix,
             commit_length=config.commit_length,
         )
-        if v.base == "0.0.0" and not config.fallback_version:
+        if v.base == "0.0.0" and not config.fallback_version and not ws_version:
             print(
                 f"uv-workspace-dynamic-versioning: No tags found matching pattern '{config.pattern}'. "
                 "Returning 0.0.0. Use [tool.uv-workspace-dynamic-versioning] pattern to configure.",
@@ -155,6 +219,12 @@ def _get_vcs_version(config: PluginConfig, project_dir: Path) -> Version:
             )
         return v
     except RuntimeError as e:
+        if ws_version:
+            parsed = Version.parse(ws_version)
+            parsed.distance = 0
+            parsed.commit = ""
+            parsed.dirty = False
+            return parsed
         if config.fallback_version:
             return Version(config.fallback_version)
         print(
@@ -242,7 +312,7 @@ def get_version(config: PluginConfig, project_dir: Path) -> tuple[str, Version]:
         Tuple of (serialized_version_string, Version_object)
     """
     # 1. Check for environment variable bypass
-    if bypassed := _get_bypass_version():
+    if bypassed := _get_bypass_version(project_dir):
         parsed = Version.parse(bypassed, pattern=config.pattern)
         return bypassed, parsed
 
@@ -251,21 +321,31 @@ def get_version(config: PluginConfig, project_dir: Path) -> tuple[str, Version]:
         parsed = Version.parse(from_file, pattern=config.pattern)
         return from_file, parsed
 
-    # 3. Get version from VCS
-    version = _get_vcs_version(config, project_dir)
+    # 3. Check for workspace root version
+    ws_version = _get_workspace_version(project_dir)
 
-    # 4. Apply directory-specific patching for workspaces
+    # 4. Get version from VCS
+    version = _get_vcs_version(config, project_dir, ws_version)
+
+    # 5. Apply directory-specific patching for workspaces
     version = _patch_version_for_directory(version, project_dir)
 
-    # 5. Determine effective dirty state
+    # 6. Override base version if workspace version is specified
+    if ws_version:
+        parsed_ws = Version.parse(ws_version)
+        version.base = parsed_ws.base
+        version.stage = parsed_ws.stage
+        version.revision = parsed_ws.revision
+
+    # 7. Determine effective dirty state
     effective_dirty = config.dirty if config.dirty is not None else version.dirty
 
-    # 6. Apply bumping if configured
+    # 8. Apply bumping if configured
     bump_cfg = config.bump_config
     if bump_cfg.enable and version.distance > 0:
         version = version.bump(index=bump_cfg.index)
 
-    # 7. Format and serialize
+    # 9. Format and serialize
     if config.format_jinja:
         serialized = render_jinja_template(
             config.format_jinja,

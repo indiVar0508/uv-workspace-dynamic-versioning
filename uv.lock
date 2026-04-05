@@ -1354,7 +1354,7 @@ wheels = [
 
 [[package]]
 name = "uv-workspace-dynamic-versioning"
-version = "0.1.4.dev3+gceb605615"
+version = "0.1.4.dev8+gb3f821359.d20260405"
 source = { editable = "." }
 dependencies = [
     { name = "dunamai" },
