@@ -1,9 +1,6 @@
-import os
-import pytest
-from pathlib import Path
-from dunamai import Version
 from uv_workspace_dynamic_versioning.schemas import PluginConfig
 from uv_workspace_dynamic_versioning.version_source import get_version
+
 
 def test_override_env_var(tmp_path, monkeypatch):
     pkg_dir = tmp_path / "pkg"

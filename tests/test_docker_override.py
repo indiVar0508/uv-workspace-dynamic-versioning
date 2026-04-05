@@ -1,9 +1,6 @@
-import pytest
-from pathlib import Path
-from unittest.mock import patch
-from dunamai import Version
 from uv_workspace_dynamic_versioning.schemas import PluginConfig
 from uv_workspace_dynamic_versioning.version_source import get_version
+
 
 def test_override_and_docker_fallback(tmp_path):
     # Simulate workspace without git (Docker environment)

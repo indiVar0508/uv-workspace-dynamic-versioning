@@ -72,7 +72,7 @@ def _get_bypass_version(project_dir: Path) -> str | None:
                             k, v = part.split("=", 1)
                             if k.strip() == project_name:
                                 return v.strip()
-        except Exception:
+        except Exception:  # nosec B110
             pass
 
     # 2. Check for global bypass
@@ -108,8 +108,8 @@ def _get_workspace_version(project_dir: Path) -> str | None:
                 version = project.get("version")
                 if version and isinstance(version, str):
                     return version
-        except Exception:
-            pass
+        except Exception:  # nosec B112
+            continue
 
     return None
 
