@@ -405,3 +405,46 @@ The project is a `hatch` extension for `uv` workspaces utilizing `hatchling` and
 - Reverted `CHANGELOG.md` and project milestones to reflect that `v0.1.4` remains in a pending, unreleased state.
 - Decided to pause automated release triggers in favor of manual, user-confirmed deployment cycles to prevent future protocol breaches.
 - Synchronized local state with the remote repository to ensure a clean baseline for future authorized work.
+
+---
+
+## Commit e209face | 2026-04-05T18:00:13.009Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary development and memory track for `uv-workspace-dynamic-versioning`, a `hatch` plugin that automates versioning and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces that automates versioning and dependency injection using `hatchling` and `dunamai`, featuring directory-specific Git history filtering for accurate monorepo versioning. A robust foundation includes a `pytest` suite with 92% coverage, Material-themed documentation, and critical security hardening against SSTI and Path Traversal risks. After a stable v0.1.1 release, the codebase was refactored with Pydantic v2 and a "Security First" supply-chain policy was implemented, pinning all dependencies and GitHub Actions to immutable SHAs. Most recently, the CI/CD pipeline was integrated with `actions/attest-build-provenance` to achieve SLSA Level 3 security standards, and strict maintainer protocols were established to forbid unauthorized tagging and ensure all releases are manually approved by the user.
+
+### This Commit's Contribution
+
+- Implemented `_get_workspace_version` to traverse the directory tree and extract version strings from root `pyproject.toml` files using safe AST and TOML parsing.
+- Updated `get_version` to gracefully handle `dunamai` `RuntimeError` (e.g., missing `.git` in Docker environments) by falling back to the discovered workspace version as a baseline.
+- Refined the version overriding logic to replace the VCS tag base with the workspace version while preserving `distance` and `commit` metrics, enabling accurate development versions in monorepos.
+- Introduced the `source = "root-pyproject"` configuration option to automatically synchronize workspace member versions with the root project.
+- Relaxed the "from-file" security boundary to allow reading files up to the Git repository or `uv` workspace root, enabling cross-package version sharing.
+- Added a comprehensive verification suite and a new example (`examples/07-root-pyproject-version`) to validate workspace-wide version inheritance across diverse build environments.
+
+---
+
+## Commit 5d75f2dd | 2026-04-05T18:07:42.812Z
+
+### Branch Purpose
+
+The `main` branch serves as the primary development and memory track for `uv-workspace-dynamic-versioning`, a `hatch` plugin that automates versioning and dependency injection in `uv` workspaces.
+
+### Previous Progress Summary
+
+The project is a `hatch` extension for `uv` workspaces that automates versioning and dependency injection using `hatchling` and `dunamai`, featuring directory-specific Git history filtering for accurate monorepo versioning. A robust foundation includes a `pytest` suite with 92% coverage, Material-themed documentation, and critical security hardening against SSTI and Path Traversal risks. After a stable v0.1.1 release, the codebase was refactored with Pydantic v2 and a "Security First" supply-chain policy was implemented, pinning all dependencies and GitHub Actions to immutable SHAs. Most recently, the CI/CD pipeline was integrated with SLSA Level 3 build provenance, and the plugin was enhanced to support version inheritance from the workspace root `pyproject.toml`, resolving issues in Docker environments where `.git` is missing.
+
+### This Commit's Contribution
+
+- Implemented `UV_WORKSPACE_DYNAMIC_VERSIONING_OVERRIDE` to allow selective version pinning for specific workspace packages (e.g., `pkg1=1.0.0, pkg2=2.0.0`) using comma-separated key-value pairs.
+- Introduced `UV_WORKSPACE_DYNAMIC_VERSIONING_BYPASS` as the primary global override variable, aligning with the project's namespace.
+- Maintained backward compatibility by preserving the existing `UV_DYNAMIC_VERSIONING_BYPASS` behavior as a fallback.
+- Refined `_get_bypass_version` to dynamically resolve package names from local `pyproject.toml` files, ensuring environment variables correctly target specific monorepo members.
+- Established a clear precedence order for version resolution: Package-Specific Override > Global Workspace Bypass > Legacy Global Bypass > VCS Metrics.
+- Added `tests/test_env_bypass.py` to verify the override logic across different environment configurations and package contexts.
+- Bridged the feature gap between `uv` and `poetry` dynamic versioning tools, facilitating smoother CI/CD and distribution workflows.

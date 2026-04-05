@@ -59,3 +59,13 @@ Call `memory_commit` when one of these is true:
 - **No direct log.md writes**: The extension maintains log.md automatically
 - **Status is automatic**: Memory status is injected at session start and appended to tool results (compact/truncated when large; use `read .memory/main.md` for full roadmap)
 - **Keep main.md current**: After every commit, re-read `.memory/main.md` in full and rewrite stale sections. Current State should describe what is true _right now_ — remove historical context that belongs in Key Decisions or Milestones. The goal is curation, not accumulation. For trivial commits that don't change project state, pass `update_roadmap: false` to skip the reminder.
+
+## Workflow Rules (Mandatory)
+1. **Clarify/Assess Task**: When given a task, explicitly clarify if it is a bug, enhancement, or question.
+2. **Seek Permission for Issue**: Ask for permission to open a GitHub issue before starting the work.
+3. **Execute Upon Approval**: Once the user says yes:
+   - Open the GitHub issue.
+   - Cut a feature branch.
+   - Create a Pull Request (PR).
+4. **No Manual Tags**: Never push a tag manually until explicitly instructed.
+5. **No Direct Pushes to Main**: Never push directly to `main`. Always create a branch and PR.
