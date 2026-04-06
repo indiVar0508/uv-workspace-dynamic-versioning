@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from uv_workspace_dynamic_versioning.schemas import PluginConfig, load_project_config
+from uv_workspace_dynamic_versioning.schemas import (
+    PluginConfig,
+    load_project_config,
+    parse_project_config,
+)
 from uv_workspace_dynamic_versioning.version_source import (
     DynamicWorkspaceVersionSource,
     check_version_style,
@@ -22,7 +26,7 @@ class TestPluginConfig:
         assert config.vcs.value == "any"
         assert config.latest_tag is False
         assert config.strict is False
-        assert config.bump is False
+        assert config.bump.enable is False
 
     def test_config_from_dict(self):
         """Test creating config from dictionary."""
@@ -34,7 +38,7 @@ class TestPluginConfig:
         config = PluginConfig(**data)
         assert config.vcs.value == "git"
         assert config.latest_tag is True
-        assert config.bump is True
+        assert config.bump.enable is True
 
     def test_jinja_format(self):
         """Test Jinja format configuration."""
@@ -57,9 +61,9 @@ class TestPluginConfig:
         assert config.style.value == "pep440"
 
     def test_extra_fields_ignored(self):
-        """Test that extra fields are ignored."""
+        """Test that extra fields are ignored when parsed via factory."""
         data = {"unknown_field": "value", "vcs": "git"}
-        config = PluginConfig(**data)
+        config = parse_project_config(data)
         assert hasattr(config, "unknown_field") is False
         assert config.vcs.value == "git"
 

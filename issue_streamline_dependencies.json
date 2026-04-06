@@ -1,0 +1,4 @@
+{
+  "title": "Refactor: Streamline dependencies and remove Pydantic/tomlkit",
+  "body": "## Description\nRefactor the project to follow best practices for build plugins by minimizing the dependency footprint. This includes replacing Pydantic with standard library dataclasses and replacing tomlkit with tomli/tomllib.\n\n## Assessment\n**Type**: Enhancement / Refactor\n\n## Proposed Solution\n- Replace Pydantic schemas in `schemas.py` with `dataclasses`.\n- Update TOML parsing to use `tomllib` (Python 3.11+) or `tomli` (fallback).\n- Update `pyproject.toml` dependencies to use flexible version ranges.\n- Ensure zero-conflict architecture for downstream users."
+}

@@ -1,0 +1,6 @@
+{
+  "title": "chore: Release v0.1.4 (Resolves #14)",
+  "head": "release/v0.1.4",
+  "base": "main",
+  "body": "Resolves #14\n\n### Description\nThis PR prepares the final `v0.1.4` release by updating the `CHANGELOG.md` with today's date and a summary of all new features, bugfixes, and CI improvements.\n\n### Changes\n- Updated `CHANGELOG.md` to reflect `v0.1.4` release status.\n- Documented major features: Docker build support, dynamic version overrides, and CI hardening."
+}
