@@ -233,8 +233,8 @@ def test_jinja_imports_validation():
 
 def test_template_error_handling():
     """Test Jinja template error cases."""
-    from uv_workspace_dynamic_versioning.template import render_jinja_template
     from uv_workspace_dynamic_versioning.schemas import FormatJinjaImport
+    from uv_workspace_dynamic_versioning.template import render_jinja_template
 
     v = Version("1.0.0")
 

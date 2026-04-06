@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.5] - 2026-04-06
 
+### Added
+- Integrated `pre-commit` hooks for automated linting and formatting using Ruff.
+
 ### Changed
 - Streamlined architecture by removing `pydantic` and `tomlkit` dependencies, favoring standard library `dataclasses` and `tomllib` (with `tomli` fallback).
 - Loosened dependency version constraints in `pyproject.toml` to flexible ranges (`>=`) to prevent downstream conflicts.

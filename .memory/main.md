@@ -6,11 +6,11 @@ A dynamic versioning plugin for `uv` workspaces, built as a `hatch` extension.
 To simplify and automate version management in `uv` workspaces by providing a dynamic version source that integrates with the `hatch` build backend.
 
 ## Current State
-- **Streamlined Architecture**: Removed heavy dependencies (`pydantic`, `tomlkit`) in favor of standard library `dataclasses` and `tomllib` (with `tomli` fallback). This ensures "zero-conflict" for downstream users.
+- **Streamlined Architecture**: Removed heavy dependencies (`pydantic`, `tomlkit`) in favor of standard library `dataclasses` and `tomllib` (with `tomli` fallback). This ensures "zero-conflict" for downstream users. Refactor submitted in **PR #17**.
 - **Improved Accuracy**: Fixed directory-specific patching logic to use localized path filters, preventing version "bleeding" between workspace packages.
 - **Enhanced Quality**: Maintained **92%** test coverage after refactor, with updated tests for the new dataclass-based schema system.
 - **Security Gated CI**: Unified CI/CD pipeline ensures that PyPI releases only happen after passing linting, Bandit security scans, and programmatic build validation.
-- **v0.1.5 Status**: Refactored to minimize dependency footprint and loosen version constraints. Prepared for release.
+- **v0.1.5 Status**: Refactored to minimize dependency footprint and loosen version constraints. PR #17 is pending review.
 - **Security Protocols**: Updated maintainer protocols to ensure zero-automated-tagging. All releases must be initiated by the user.
 
 ## Maintainer Role & Accountability
@@ -42,7 +42,7 @@ As the official maintainer of `uv-workspace-dynamic-versioning`, I am responsibl
 - [x] Automated Release Gating (CI/CD).
 - [x] Initial release (v0.1.0).
 - [x] Stable Pydantic v2 Refactor (v0.1.3).
-- [x] Streamlined dependency refactor (v0.1.5).
+- [x] Streamlined dependency refactor (v0.1.5) - PR #17.
 
 ## Open Questions
 - How to handle the transition to MkDocs 2.0 when it becomes stable?

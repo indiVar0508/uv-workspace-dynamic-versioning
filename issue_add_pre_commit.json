@@ -1,0 +1,4 @@
+{
+  "title": "Enhancement: Add pre-commit hooks for automated linting",
+  "body": "## Description\nImplement pre-commit hooks to automate linting and formatting (using Ruff) before commits are made. This ensures code quality and prevents linting failures in the CI pipeline.\n\n## Assessment\n**Type**: Enhancement\n\n## Proposed Solution\n- Add `pre-commit` to dev dependencies in `pyproject.toml`.\n- Create `.pre-commit-config.yaml` with Ruff hooks (lint and format).\n- Fix existing lint errors revealed by the new hooks."
+}

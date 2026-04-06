@@ -36,6 +36,7 @@ dev = [
     "pytest-cov",
     "ruff",
     "bandit",
+    "pre-commit",
 ]
 docs = [
     "mkdocs-material[recommended]>=9.5.0",
