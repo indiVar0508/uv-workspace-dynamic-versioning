@@ -1,4 +1,0 @@
-{
-  "title": "Release v0.1.4",
-  "body": "## Description\nThis is a release issue for `v0.1.4` of `uv-workspace-dynamic-versioning`.\n\n## Assessment\n**Type**: Release\n\n## Proposed Solution\n- Update `CHANGELOG.md` with release date.\n- Create and push `v0.1.4` tag to trigger automated CI/CD publish with SLSA provenance."
-}

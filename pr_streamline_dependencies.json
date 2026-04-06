@@ -1,6 +1,0 @@
-{
-  "title": "Refactor: Streamline dependencies and remove Pydantic/tomlkit",
-  "head": "feature/streamline-dependencies",
-  "base": "main",
-  "body": "Resolves #streamline-dependencies\n\n### Description\nThis PR refactors the project to follow best practices for build plugins by minimizing the dependency footprint. It removes Pydantic and tomlkit as required dependencies, replacing them with standard library dataclasses and tomllib (with tomli fallback).\n\n### Changes\n- Removed `pydantic` and `tomlkit` from dependencies.\n- Added `tomli` as a conditional dependency for Python < 3.11.\n- Refactored `schemas.py` to use `dataclasses` and custom parsing logic.\n- Updated `version_source.py` to use the new TOML loading system.\n- Updated test suite to be compatible with the new implementation.\n- Loosened all dependency version constraints to flexible ranges (`>=`).\n\n### Impact\nDownstream users will no longer experience Pydantic or tomlkit version conflicts, and the plugin has a significantly smaller installation footprint."
-}
