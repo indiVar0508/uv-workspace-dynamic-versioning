@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-04-06
+
+### Added
+- Integrated `pre-commit` hooks for automated linting and formatting using Ruff.
+
+### Changed
+- Streamlined architecture by removing `pydantic` and `tomlkit` dependencies, favoring standard library `dataclasses` and `tomllib` (with `tomli` fallback).
+- Loosened dependency version constraints in `pyproject.toml` to flexible ranges (`>=`) to prevent downstream conflicts.
+- Updated internal configuration parsing to maintain backward compatibility with existing project configurations.
+
 ## [0.1.4] - 2026-04-05
 
 ### Added

@@ -66,6 +66,7 @@ Call `memory_commit` when one of these is true:
 3. **Execute Upon Approval**: Once the user says yes:
    - Open the GitHub issue.
    - Cut a feature branch.
+   - Update `CHANGELOG.md` with relevant changes under an 'Unreleased' or new version header.
    - Create a Pull Request (PR).
 4. **No Manual Tags**: Never push a tag manually until explicitly instructed.
 5. **No Direct Pushes to Main**: Never push directly to `main`. Always create a branch and PR.

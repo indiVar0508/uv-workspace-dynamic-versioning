@@ -14,11 +14,10 @@ import sys
 from functools import cached_property
 from pathlib import Path
 
-import tomlkit
 from dunamai import Style, Version
 from hatchling.version.source.plugin.interface import VersionSourceInterface
 
-from .schemas import PluginConfig, load_project_config
+from .schemas import PluginConfig, load_project_config, load_toml
 from .template import render_jinja_template
 
 # Standard version patterns (adapted from dunamai)
@@ -61,9 +60,7 @@ def _get_bypass_version(project_dir: Path) -> str | None:
         try:
             pyproject_path = project_dir / "pyproject.toml"
             if pyproject_path.is_file():
-                content = pyproject_path.read_text(encoding="utf-8")
-                import tomlkit
-                data = tomlkit.parse(content)
+                data = load_toml(pyproject_path)
                 project_name = data.get("project", {}).get("name")
                 
                 if project_name:
@@ -100,8 +97,7 @@ def _get_workspace_version(project_dir: Path) -> str | None:
             continue
 
         try:
-            content = pyproject_path.read_text(encoding="utf-8")
-            data = tomlkit.parse(content)
+            data = load_toml(pyproject_path)
             
             project = data.get("project", {})
             if isinstance(project, dict):
